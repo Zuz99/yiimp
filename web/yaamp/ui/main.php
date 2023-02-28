@@ -147,7 +147,7 @@ function showPageFooter()
     echo '<div class="footer">';
     $year = date("Y", time());
 
-    echo "<p>&copy; $year " . YAAMP_SITE_NAME . ' - ' . '<a href="https://github.com/Zuz99/yiimp_install_scrypt">Mod By Zuz99</a></p>';
+    echo "<p>&copy; $year " . YAAMP_SITE_NAME . ' - ' . '<a href="https://github.com/cryptopool-builders/Multi-Pool-Installer">Mod By Zuz99</a></p>';
 
     echo '</div><!-- footer -->';
 }
