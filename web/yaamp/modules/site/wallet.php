@@ -130,7 +130,7 @@ foreach($recents as $addr)
 	$coin = getdbo('db_coins', $user->coinid);
 
 	if($user->username == $username)
-		echo "<tr style='background-color: #e0d3e8;'><td width=24>";
+		echo "<tr style='background-color: #41464b;'><td width=24>";
 	else
 		echo "<tr class='ssrow'><td width=24>";
 
@@ -140,7 +140,7 @@ foreach($recents as $addr)
 	echo '</td><td><a class="address" href="/?address='.$addr.'" style="font-family: monospace; font-size: 1.1em;">'.
 		$addr.'</a></td>';
 
-	$balance = bitcoinvaluetoa($user->balance); 
+	$balance = bitcoinvaluetoa($user->balance);
 
 	if($coin)
 		$balance = $balance>0? "$balance $coin->symbol": '';
@@ -148,10 +148,10 @@ foreach($recents as $addr)
 		$balance = $balance>0? "$balance BTC": '';
 
 	echo '<td align="right">'.$balance.'</td>';
-	
+
 	$delicon = $address == $addr ? '' : '<img src="/images/base/delete.png" onclick="javascript:drop_cookie(this);" style="cursor:pointer;"/>';
 	echo '<td style="width: 16px; max-width: 16px;">'.$delicon.'</td>';
-	
+
 	echo '</tr>';
 }
 
@@ -176,10 +176,7 @@ echo <<<END
 
 </td></tr></table>
 
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
+<br>
 
 <script>
 
@@ -195,7 +192,7 @@ function page_refresh()
 
 		main_graphs_refresh();
 		main_title_refresh();
-		
+
 		main_found_refresh();
 	}
 }
@@ -357,7 +354,7 @@ function graph_init_hashrate(data, algo)
 			borderWidth: 1,
 			shadowWidth: 0,
 			shadowDepth: 0,
-			background: '#ffffff'
+			background: '#41464b'
 		},
 
 		highlighter:
@@ -412,7 +409,7 @@ function graph_earnings_init(data)
 			borderWidth: 1,
 			shadowWidth: 0,
 			shadowDepth: 0,
-			background: '#ffffff'
+			background: '#41464b'
 		},
 
 	});
@@ -436,4 +433,3 @@ function drop_cookie(el)
 
 
 END;
-

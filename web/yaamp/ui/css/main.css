@@ -6,26 +6,32 @@
 @import url("objectmenu.css");
 
 body
+
 {
-	font: normal 10pt Arial,Helvetica,sans-serif;
-	background-color: white;
-	color: #444;
+	color: #FF9A2C;
 	text-align: left;
 	margin: 0;
 	padding: 0;
 	scroll: no;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 10pt;
+	background-color: #32373c;
+	background-image: url(/images/base/background.png);
+        background-position: center;
+	background-repeat: no-repeat;
+        background-attachment: fixed;
 }
 
 a, a:visited
 {
-	color: #306495;
+	color: #ffffff;
 	background: inherit;
 	text-decoration: none;
 }
 
 a:hover
 {
-	color: #73471B;
+	color: #FF9A2C;
 	background: inherit;
 	text-decoration: underline;
 }
@@ -46,8 +52,8 @@ hr
 {
 	display: block; 
 	height: 1px;
-    border: 0; 
-    border-top: 1px solid #e5e5e5;
+        border: 0; 
+        border-top: 1px solid #e5e5e5;
 }
     
 
@@ -60,18 +66,12 @@ hr
 .page .headermenu
 {
 	position: fixed;
-	right: 10px;
 	top: 0px;
-	color: #ccc;
+	right: 0px;
+	left: 0px;
+	color: #fff;
 	z-index: 10;
 	font-size: 1.0em;
-}
-
-.page .headermenu img
-{
-	border-radius: 5px;
-	padding: 2px 0 0 0; 
-	height: 26px;
 }
 
 .page .headermenu a
@@ -88,15 +88,22 @@ hr
 	top: 0px;
 	right: 0px;
 	left: 0px;
-	z-index: 8;
+	z-index: 20;
 	height: 40px;
-	color: #aaa;
+	color: #fff;
 
-	background-image: url(/images/base/top_header.png);
 	background-repeat: repeat-x;
-	
-	-webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, .25);
-	box-shadow: 0 2px 3px rgba(0, 0, 0, .25);
+	background-color: #41464a;
+	-webkit-box-shadow: 0 2px 3px rgba(255, 154, 44);
+	box-shadow: 0 2px 3px rgba(255, 154, 44);
+}
+
+.page .tabmenu-out img
+{
+	position: fixed;
+	top: 4px;
+	left: 30px;
+	height: 32px;
 }
 
 .page .tabmenu-inner
@@ -104,22 +111,23 @@ hr
 	font-size: 1.1em;
 	font-weight: bold;
 	padding: 10px;
+	color: #FF9A2C;
 }
 
 .page .tabmenu-inner a
 {
 	text-decoration: none;
 	padding: 10px;
-	color: #aaa;
+	color: #ffffff;
 }
 
 .page .tabmenu-inner .selected
 {
-	color: #eee;
-	border: 1px solid #181818;
+	color: #FF9A2C;
 	background-image: url(/images/base/top_header_selected.png);
-	background-repeat: repeat-x;
+	background-repeat: no-repeat;
 }
+
 
 /* ---------------------------------------------- */
 
@@ -147,10 +155,10 @@ hr
 {
 	font-size: 0.8em;
 	font-weight: bold;
-	text-align: center;
+	text-align: left;
 	padding: 10px;
-	background-color: #ccc;
-	color: #333;
+	background-color: #41464a;
+	color: #FF9A2C;
 }
 
 .page .footer p
@@ -163,20 +171,24 @@ hr
 
 .main-left-box
 {
-	border: 1px solid #e8e8e8;
+	border: 1px solid #FF9A2C;
+	box-shadow: 0 1px 3px rgba(255, 154, 44);
 	border-radius: 5px;
 }
 
 .main-left-title
 {
 	padding: 8px;
-	background-color: #e5e5e5;
+	background-color: #41464a;
 	font-weight: bold;
+        color: #fff;
 }
 
 .main-left-inner
 {
 	padding: 5px;
+        color: #fff;
+	background-color: #41464a;
 }
 
 .main-left-inner ul

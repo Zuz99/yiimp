@@ -12,10 +12,10 @@ $height = '240px';
 
 echo <<<end
 
-<div id='resume_update_button' style='color: #444; background-color: #ffd; border: 1px solid #eea;
-	padding: 10px; margin-left: 20px; margin-right: 20px; margin-top: 15px; cursor: pointer; display: none;'
-	onclick='auto_page_resume();' align=center>
-<b>Auto refresh is paused - Click to resume</b></div>
+<div id='resume_update_button' style='color: #ffffff; background-color: #41464b; border: 1px solid #7d7d7d;
+    padding: 10px; margin-left: 20px; margin-right: 20px; margin-top: 15px; cursor: pointer; display: none;'
+    onclick='auto_page_resume();' align=center>
+    <b>Auto Refresh Is Paused - Click Here To Resume</b></div>
 
 <table cellspacing=20 width=100%>
 <tr><td valign=top width=50%>
@@ -70,14 +70,10 @@ echo <<<end
 <script>
 
 var global_algo = '$algo';
-var querystring = '?algo=$algo';
-if (querystring=='?algo=') querystring = '';
 
 function select_algo(algo)
 {
-	//window.location.href = '/site/gomining?algo='+algo;
-	window.location.href = '/site/algo?algo='+algo+'&r=/site/mining';
-	//window.location.href = '/site/mining?algo='+algo;
+	window.location.href = '/site/gomining?algo='+algo;
 }
 
 function page_refresh()
@@ -102,7 +98,7 @@ function pool_current_ready(data)
 
 function pool_current_refresh()
 {
-	var url = "/site/current_results"+querystring;
+	var url = "/site/current_results";
 	$.get(url, '', pool_current_ready);
 }
 
@@ -115,7 +111,7 @@ function mining_ready(data)
 
 function mining_refresh()
 {
-	var url = "/site/mining_results"+querystring;
+	var url = "/site/mining_results";
 	$.get(url, '', mining_ready);
 }
 
@@ -128,7 +124,7 @@ function found_ready(data)
 
 function found_refresh()
 {
-	var url = "/site/found_results"+querystring;
+	var url = "/site/found_results";
 	$.get(url, '', found_ready);
 }
 
@@ -141,7 +137,7 @@ function main_ready_price(data)
 
 function main_refresh_price()
 {
-	var url = "/site/graph_price_results"+querystring;
+	var url = "/site/graph_price_results";
 	$.get(url, '', main_ready_price);
 }
 
@@ -175,7 +171,7 @@ function graph_init_price(data)
 			borderWidth: 1,
 			shadowWidth: 0,
 			shadowDepth: 0,
-			background: '#ffffff'
+			background: '#41464b'
 		},
 
 	});
@@ -190,7 +186,7 @@ function pool_hashrate_ready(data)
 
 function pool_hashrate_refresh()
 {
-	var url = "/site/graph_hashrate_results"+querystring;
+	var url = "/site/graph_hashrate_results";
 	$.get(url, '', pool_hashrate_ready);
 }
 
@@ -201,7 +197,7 @@ function pool_hashrate_graph_init(data)
 	var t = $.parseJSON(data);
 	var plot1 = $.jqplot('pool_hashrate_results', t,
 	{
-		title: '<b>Pool Hashrate ($algo_unit/s)</b>',
+		title: '<b>Pool Hashrate ({$algo_unit}/s)</b>',
 		axes: {
 			xaxis: {
 				tickInterval: 7200,
@@ -224,7 +220,7 @@ function pool_hashrate_graph_init(data)
 			borderWidth: 1,
 			shadowWidth: 0,
 			shadowDepth: 0,
-			background: '#ffffff'
+			background: '#41464b'
 		},
 
 		highlighter:

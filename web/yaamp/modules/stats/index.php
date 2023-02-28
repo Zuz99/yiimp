@@ -17,36 +17,49 @@ JavascriptFile('/yaamp/ui/js/auto_refresh.js');
 $hour = 60 * 60;
 $days = 24 * $hour;
 
-$dbMax = (int) controller()->memcache->get_database_scalar("stats_maxt-$algo",
-	"SELECT (MAX(time)-30*60) FROM hashstats WHERE time>:t AND algo=:algo", array(':t'=>time()-2*$hour,':algo'=>$algo));
-$dtMax = max(time()-$hour, $dbMax);
+$dbMax = (int)controller()
+    ->memcache
+    ->get_database_scalar("stats_maxt-$algo", "SELECT (MAX(time)-30*60) FROM hashstats WHERE time>:t AND algo=:algo", array(
+    ':t' => time() - 2 * $hour,
+    ':algo' => $algo
+));
+$dtMax = max(time() - $hour, $dbMax);
 
-$t1 = $dtMax - 2*$days;
-$t2 = $dtMax - 7*$days;
-$t3 = $dtMax - 30*$days;
+$t1 = $dtMax - 2 * $days;
+$t2 = $dtMax - 7 * $days;
+$t3 = $dtMax - 30 * $days;
 
-$row1 = controller()->memcache->get_database_row("stats_col1-$algo",
-	"SELECT AVG(hashrate) as a, SUM(earnings) as b FROM hashstats WHERE time>$t1 AND algo=:algo", array(':algo'=>$algo));
-$row2 = controller()->memcache->get_database_row("stats_col2-$algo",
-	"SELECT AVG(hashrate) as a, SUM(earnings) as b FROM hashstats WHERE time>$t2 AND algo=:algo", array(':algo'=>$algo));
-$row3 = controller()->memcache->get_database_row("stats_col3-$algo",
-	"SELECT AVG(hashrate) as a, SUM(earnings) as b FROM hashstats WHERE time>$t3 AND algo=:algo", array(':algo'=>$algo));
+$row1 = controller()
+    ->memcache
+    ->get_database_row("stats_col1-$algo", "SELECT AVG(hashrate) as a, SUM(earnings) as b FROM hashstats WHERE time>$t1 AND algo=:algo", array(
+    ':algo' => $algo
+));
+$row2 = controller()
+    ->memcache
+    ->get_database_row("stats_col2-$algo", "SELECT AVG(hashrate) as a, SUM(earnings) as b FROM hashstats WHERE time>$t2 AND algo=:algo", array(
+    ':algo' => $algo
+));
+$row3 = controller()
+    ->memcache
+    ->get_database_row("stats_col3-$algo", "SELECT AVG(hashrate) as a, SUM(earnings) as b FROM hashstats WHERE time>$t3 AND algo=:algo", array(
+    ':algo' => $algo
+));
 
-if($row1['a']>0 && $row2['a']>0 && $row3['a']>0)
+if ($row1['a'] > 0 && $row2['a'] > 0 && $row3['a'] > 0)
 {
-	$a1 = max(1., (double) $row1['a']);
-	$a2 = max(1., (double) $row2['a']);
-	$a3 = max(1., (double) $row3['a']);
+    $a1 = max(1., (double)$row1['a']);
+    $a2 = max(1., (double)$row2['a']);
+    $a3 = max(1., (double)$row3['a']);
 
-	$btcmhday1 = bitcoinvaluetoa(($row1['b'] / 2)  * $algo_factor * (1000000 / $a1));
-	$btcmhday2 = bitcoinvaluetoa(($row2['b'] / 7)  * $algo_factor * (1000000 / $a2));
-	$btcmhday3 = bitcoinvaluetoa(($row3['b'] / 30) * $algo_factor * (1000000 / $a3));
+    $btcmhday1 = bitcoinvaluetoa(($row1['b'] / 2) * $algo_factor * (1000000 / $a1));
+    $btcmhday2 = bitcoinvaluetoa(($row2['b'] / 7) * $algo_factor * (1000000 / $a2));
+    $btcmhday3 = bitcoinvaluetoa(($row3['b'] / 30) * $algo_factor * (1000000 / $a3));
 }
 else
 {
-	$btcmhday1 = 0;
-	$btcmhday2 = 0;
-	$btcmhday3 = 0;
+    $btcmhday1 = 0;
+    $btcmhday2 = 0;
+    $btcmhday3 = 0;
 }
 
 $hashrate1 = Itoa2($row1['a']);
@@ -62,28 +75,27 @@ $height = '240px';
 //$algos = yaamp_get_algos();
 $algos = array();
 $enabled = dbolist("SELECT algo, count(id) as count FROM coins WHERE enable AND visible GROUP BY algo ORDER BY algo");
-foreach ($enabled as $row) {
-	$algos[$row['algo']] = $row['count'];
+foreach ($enabled as $row)
+{
+    $algos[$row['algo']] = $row['count'];
 }
 
 $string = '';
-foreach($algos as $a => $count)
+foreach ($algos as $a => $count)
 {
-	if($a == $algo)
-		$string .= "<option value='$a' selected>$a</option>";
-	else
-		$string .= "<option value='$a'>$a</option>";
+    if ($a == $algo) $string .= "<option value='$a' selected>$a</option>";
+    else $string .= "<option value='$a'>$a</option>";
 }
 
 // to fill the graphs on right edges (big tick interval of 4 days)
 $dtMin1 = $t1 + $hour;
 $dtMax1 = $dtMax;
 
-$dtMin2 = $t2 - 2*$hour;
+$dtMin2 = $t2 - 2 * $hour;
 $dtMax2 = $dtMin2 + 7 * $days;
 
-$dtMin3 = $dtMax1 - (8*4+1)*$days;
-$dtMax3 = $dtMin3 + (8*4) * $days;
+$dtMin3 = $dtMax1 - (8 * 4 + 1) * $days;
+$dtMax3 = $dtMin3 + (8 * 4) * $days;
 
 echo <<<end
 
@@ -169,10 +181,7 @@ $('#algo_select').change(function(event)
 
 </td></tr></table>
 
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
+<br>
 
 <script type="text/javascript">
 
@@ -200,9 +209,10 @@ function page_refresh()
 
 end;
 
-for($i = 1; $i < 10; $i++)
+
+for ($i = 1;$i < 10;$i++)
 {
-	echo <<<end
+    echo <<<end
 	///////////////////////////////////////////////////////////////////////
 
 	function main_ready_$i(data)
@@ -216,6 +226,7 @@ for($i = 1; $i < 10; $i++)
 		$.get(url, '', main_ready_$i);
 	}
 end;
+
 }
 
 echo <<<end
@@ -227,7 +238,7 @@ function graph_init_1(data)
 	var t = $.parseJSON(data);
 	var plot1 = $.jqplot('graph_results_1', [t],
 	{
-		title: '<b>Hashrate ({$algo_unit}/s)</b>',
+		title: '<b>Pool Hashrate ({$algo_unit}/s)</b>',
 		axes: {
 			xaxis: {
 				min: dtMin1,
@@ -253,7 +264,8 @@ function graph_init_1(data)
 		grid: {
 			borderWidth: 1,
 			shadowWidth: 2,
-			shadowDepth: 2
+			shadowDepth: 2,
+			background: '#41464b'
 		},
 
 	});
@@ -289,7 +301,8 @@ function graph_init_2(data)
 		grid: {
 			borderWidth: 1,
 			shadowWidth: 2,
-			shadowDepth: 2
+			shadowDepth: 2,
+			background: '#41464b'
 		},
 
 	});
@@ -325,7 +338,8 @@ function graph_init_3(data)
 		grid: {
 			borderWidth: 1,
 			shadowWidth: 2,
-			shadowDepth: 2
+			shadowDepth: 2,
+			background: '#41464b'
 		},
 
 	});
@@ -340,7 +354,7 @@ function graph_init_4(data)
 	var t = $.parseJSON(data);
 	var plot1 = $.jqplot('graph_results_4', [t],
 	{
-		title: '<b>Hashrate ({$algo_unit}/s)</b>',
+		title: '<b>Pool Hashrate ({$algo_unit}/s)</b>',
 		axes: {
 			xaxis: {
 				min: dtMin2,
@@ -366,7 +380,8 @@ function graph_init_4(data)
 		grid: {
 			borderWidth: 1,
 			shadowWidth: 2,
-			shadowDepth: 2
+			shadowDepth: 2,
+			background: '#41464b'
 		},
 
 	});
@@ -402,7 +417,8 @@ function graph_init_5(data)
 		grid: {
 			borderWidth: 1,
 			shadowWidth: 2,
-			shadowDepth: 2
+			shadowDepth: 2,
+			background: '#41464b'
 		},
 
 	});
@@ -438,7 +454,8 @@ function graph_init_6(data)
 		grid: {
 			borderWidth: 1,
 			shadowWidth: 2,
-			shadowDepth: 2
+			shadowDepth: 2,
+			background: '#41464b'
 		},
 
 	});
@@ -453,7 +470,7 @@ function graph_init_7(data)
 	var t = $.parseJSON(data);
 	var plot1 = $.jqplot('graph_results_7', [t],
 	{
-		title: '<b>Hashrate ({$algo_unit}/s)</b>',
+		title: '<b>Pool Hashrate ({$algo_unit}/s)</b>',
 		axes: {
 			xaxis: {
 				min: dtMin3,
@@ -479,7 +496,8 @@ function graph_init_7(data)
 		grid: {
 			borderWidth: 1,
 			shadowWidth: 2,
-			shadowDepth: 2
+			shadowDepth: 2,
+			background: '#41464b'
 		},
 
 	});
@@ -515,7 +533,8 @@ function graph_init_8(data)
 		grid: {
 			borderWidth: 1,
 			shadowWidth: 2,
-			shadowDepth: 2
+			shadowDepth: 2,
+			background: '#41464b'
 		},
 
 	});
@@ -551,7 +570,8 @@ function graph_init_9(data)
 		grid: {
 			borderWidth: 1,
 			shadowWidth: 2,
-			shadowDepth: 2
+			shadowDepth: 2,
+			background: '#41464b'
 		},
 
 	});
@@ -560,5 +580,3 @@ function graph_init_9(data)
 
 </script>
 end;
-
-

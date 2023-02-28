@@ -50,8 +50,9 @@ class ApiController extends CommonController
                 ':algo' => $algo
             ));
 
-            $hashrate_shared = controller()->memcache->get_database_scalar("api_status_hashrate-shares-$algo", "select hashrate from hashuser where algo=:algo and $workers_shared order by time desc limit 1", 
-				array(':algo' => $algo));
+            $hashrate_shared = controller()->memcache->get_database_scalar("api_status_hashrate-shares-$algo", "select hashrate from hashuser where algo=:algo and $workers_shared order by time desc limit 1", array(
+                 ':algo' => $algo
+            ));
 
             $hashrate_solo = controller()->memcache->get_database_scalar("api_status_hashrate-solo-$algo", "select hashrate from hashuser where algo=:algo and $workers_solo order by time desc limit 1", array(
                 ':algo' => $algo
@@ -97,8 +98,8 @@ class ApiController extends CommonController
                 "port" => (int) $port,
                 "coins" => $coins,
                 "fees" => (double) $fees,
-                "fees_solo" => (double) $fees_solo,
-                "hashrate" => (int) $hashrate,
+                "fees_solo" => (int) $fees_solo,
+                "hashrate" => (double) $hashrate,
                 //"hashrate_shared" => (double) $hashrate_shared,
                 //"hashrate_solo" => (double) $hashrate_solo,
                 "workers" => (int) $workers,
@@ -157,7 +158,7 @@ class ApiController extends CommonController
                 $lastblock     = (int) arraySafeVal($last, 'height');
                 $lastblock_shares   = (int) arraySafeVal($last_shares, 'height');
                 $lastblock_solo     = (int) arraySafeVal($last_solo, 'height');
-				
+
                 $timesincelast = $timelast = (int) arraySafeVal($last, 'time');
                 if ($timelast > 0)
                     $timesincelast = time() - $timelast;
@@ -172,7 +173,7 @@ class ApiController extends CommonController
 
                 $workers = (int) dboscalar("SELECT count(W.userid) AS workers FROM workers W " . "INNER JOIN accounts A ON A.id = W.userid " . "WHERE W.algo=:algo AND A.coinid IN (:id, 6)", // 6: btc id
                     array(':algo' => $coin->algo,':id' => $coin->id));
-				
+
 				$workers_shared = (int) dboscalar("SELECT count(W.userid) AS workers FROM workers W " . "INNER JOIN accounts A ON A.id = W.userid " . "WHERE W.algo=:algo AND A.coinid IN (:id, 6) and not password like '%m=solo%'", // 6: btc id
                     array(':algo' => $coin->algo,':id' => $coin->id));
 
@@ -213,19 +214,19 @@ class ApiController extends CommonController
                 $min_ttf      = $coin->network_ttf > 0 ? min($coin->actual_ttf, $coin->network_ttf) : $coin->actual_ttf;
                 $network_hash = $coin->difficulty * 0x100000000 / ($min_ttf ? $min_ttf : 60);
 
-				$fees = yaamp_fee($coin->algo);
-				$fees_solo = yaamp_fee_solo($coin->algo);
-				$port_db = getdbosql('db_stratums', "algo=:algo and symbol=:symbol", array(':algo' => $coin->algo,':symbol' => $coin->symbol));
+		$fees = yaamp_fee($coin->algo);
+		$fees_solo = yaamp_fee_solo($coin->algo);
+		$port_db = getdbosql('db_stratums', "algo=:algo and symbol=:symbol", array(':algo' => $coin->algo,':symbol' => $coin->symbol));
 
                 $data[$symbol] = array(
                     'algo' => $coin->algo,
-					'port' => $port_db->port,
-					'name' => $coin->name,
+                    'port' => $port_db->port,
+                    'name' => $coin->name,
                     'reward' => $coin->reward,
                     'height' => (int) $coin->block_height,
                     'difficulty' => $coin->difficulty,
-					'fees' => (double) $fees,
-					'fees_solo' => (double) $fees_solo,
+		    "fees" => (double) $fees,
+		    "fees_solo" => (double) $fees_solo,
                     'workers' => $workers,
                     'workers_shared' => $workers_shared,
                     'workers_solo' => $workers_solo,
@@ -239,12 +240,12 @@ class ApiController extends CommonController
                     '24h_blocks' => (int) arraySafeVal($res24h, 'a'),
                     '24h_btc' => round(arraySafeVal($res24h, 'b', 0), 8),
                     'lastblock' => $lastblock,
+                    'timesincelast' => $timesincelast,
                     'lastblock_shares' => $lastblock_shares,
                     'lastblock_solo' => $lastblock_solo,
                     'timesincelast' => $timesincelast,
 					'timesincelast_shares' => $timesincelast_shares,
 					'timesincelast_solo' => $timesincelast_solo
-					
                 );
 
                 if (!empty($coin->symbol2))

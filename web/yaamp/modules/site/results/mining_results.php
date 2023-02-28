@@ -103,7 +103,6 @@ foreach ($list as $coin) {
     $pool_hash_pow_sfx = $pool_hash_pow ? Itoa2($pool_hash_pow) . 'h/s' : '';
 
     $min_ttf      = $coin->network_ttf > 0 ? min($coin->actual_ttf, $coin->network_ttf) : $coin->actual_ttf;
-
     $network_hash = controller()
         ->memcache
         ->get("yiimp-nethashrate-{$coin->symbol}");
@@ -125,9 +124,9 @@ foreach ($list as $coin) {
                 ->memcache
                 ->set("yiimp-nethashrate-{$coin->symbol}", $network_hash, 60);
         }
-		else
+        else
 		{
-			$network_hash = $coin->difficulty * 0x100000000 / ($min_ttf? $min_ttf: 60);
+		    $network_hash = $coin->difficulty * 0x100000000 / ($min_ttf? $min_ttf: 60);
 		}
     }
     $network_hash = $network_hash ? Itoa2($network_hash) . 'h/s' : '';

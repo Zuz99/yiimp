@@ -1,8 +1,7 @@
 <?php
-
 if (!$coin) $this->goback();
 
-$this->pageTitle = $coin->name." block explorer";
+$this->pageTitle = $coin->name . " block explorer";
 
 $remote = new WalletRPC($coin);
 
@@ -31,64 +30,54 @@ span.monospace { font-family: monospace; }
 <tbody>
 END;
 
+
 $tx = $remote->getrawtransaction($txhash, 1);
-if(!$tx) continue;
+if (!$tx) continue;
 
 $valuetx = 0;
-foreach($tx['vout'] as $vout)
-	$valuetx += $vout['value'];
+foreach ($tx['vout'] as $vout) $valuetx += $vout['value'];
 
-$coinUrl = $this->createUrl('/explorer', array('id'=>$coin->id));
+$coinUrl = $this->createUrl('/explorer', array(
+    'id' => $coin->id
+));
 
 echo '<tr class="ssrow">';
 
-echo '<td><span class="monospace">'.CHtml::link($tx['txid'], $coinUrl.'txid='.$tx['txid']).'</a></span></td>';
-echo '<td>'.$valuetx.'</td>';
+echo '<td><span class="monospace">' . CHtml::link($tx['txid'], $coinUrl . 'txid=' . $tx['txid']) . '</a></span></td>';
+echo '<td>' . $valuetx . '</td>';
 
 echo "<td>";
-foreach($tx['vin'] as $vin)
+foreach ($tx['vin'] as $vin)
 {
-	if(isset($vin['coinbase']))
-		echo "Generation";
+    if (isset($vin['coinbase'])) echo "Generation";
 
 }
 echo "</td>";
 
 echo "<td>";
-foreach($tx['vout'] as $vout)
+foreach ($tx['vout'] as $vout)
 {
-	$value = $vout['value'];
+    $value = $vout['value'];
 
-	if(isset($vout['scriptPubKey']['addresses'][0]))
-		echo '<span class="monospace">'.$vout['scriptPubKey']['addresses'][0]."</span> ($value)";
-	else
-		echo "($value)";
+    if (isset($vout['scriptPubKey']['addresses'][0])) echo '<span class="monospace">' . $vout['scriptPubKey']['addresses'][0] . "</span> ($value)";
+    else echo "($value)";
 
-	echo '<br>';
+    echo '<br>';
 }
 echo "</td>";
 
 echo "</tr></tbody>";
 echo "</table>";
 
-$actionUrl = $coin->visible ? '/explorer/'.$coin->symbol : '/explorer/search?id='.$coin->id;
+$actionUrl = $coin->visible ? '/explorer/' . $coin->symbol : '/explorer/search?id=' . $coin->id;
 
 echo <<<end
 <form action="{$actionUrl}" method="POST" style="padding: 10px;">
-<input type="text" name="height" class="main-text-input" placeholder="block height" style="width: 80px;">
-<input type="text" name="txid" class="main-text-input" placeholder="tx hash" style="width: 450px; margin: 4px;">
+<input type="text" name="height" class="main-text-input" placeholder="Block Height" style="width: 80px;">
+<input type="text" name="txid" class="main-text-input" placeholder="TX Hash" style="width: 400px; margin: 4px;">
 <input type="submit" value="Search" class="main-submit-button" >
 </form>
 end;
 
+
 echo '<br><br><br><br><br><br><br><br><br><br>';
-echo '<br><br><br><br><br><br><br><br><br><br>';
-echo '<br><br><br><br><br><br><br><br><br><br>';
-
-
-
-
-
-
-
-
