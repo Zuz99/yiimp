@@ -25,7 +25,12 @@
 #include <vector>
 
 using namespace std;
+#include "satoshi/uint256.h"
 
+#include "ethash/helpers.hpp"
+#include "ethash/include/ethash/ethash.hpp"
+#include "ethash/include/ethash/progpow.hpp"
+#include "kawpow.h"
 #include "iniparser/src/iniparser.h"
 
 #include "json.h"
