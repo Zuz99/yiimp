@@ -3,12 +3,12 @@ table.dataGrid
 {
 	border-collapse: collapse;
 	width: 100%;
-	color: #fff;
+	color: #0099ff;
 }
 
 table.dataGrid a, table.dataGrid a:visited
 {
-	color: #FF9A2C;
+	color: #ff9900;
 }
 
 table.dataGrid th, table.dataGrid td
@@ -20,7 +20,7 @@ table.dataGrid th
 {
 	border-bottom: 1px solid #7d7d7d;
 	background-color: #41464b;
-	color: #FF9A2C;
+	color: #0099ff;
 }
 
 table.dataGrid tbody
@@ -30,7 +30,7 @@ table.dataGrid tbody
 
 table.dataGrid td
 {
-	border-bottom: 1px solid #7d7d7d;
+	border-bottom: 1px solid #993300;
 }
 
 table.dataGrid tr.bold
@@ -50,7 +50,7 @@ table.dataGrid2
 {
 	border-collapse: collapse;
 	width: 100%;
-	color: #fff;
+	color: #0099ff;
         background-color: #41464b;
 }
 
@@ -96,8 +96,8 @@ table.dataGrid2 thead tr .headerSortDown {
 
 table.dataGrid2 th.tablesorter-headerAsc,
 table.dataGrid2 th.tablesorter-headerDesc {
-	color: #ff9a2c;
-	/* background-color: #D2E3FB; */
+	color: #d92b13;
+	/* background-color: #990000; */
 }
 
 /**********************************************/
@@ -115,7 +115,7 @@ table.reportgrid1 th, table.reportgrid1 td
 
 table.reportgrid1 th
 {
-	background: #41464b;
+	background: #006600;
 	text-align: left;
 	padding: .5em 0.4em .5em 0.4em;
 }
@@ -134,11 +134,11 @@ table.reportgrid1 tr.bold
 
 .ssrow:hover
 {
-	background-color: #41464b;
+	background-color: #ff6600;
 }
 
 .ssselected
 {
-	background-color: #41464b;
+	background-color: #006600;
 }
 
