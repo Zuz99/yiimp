@@ -255,3 +255,4 @@ void sha256_double_hash_hex(const char *input, char *output, unsigned int len);
 #include "algos/cosa.h"
 #include "algos/minotaurx.h"
 #include "algos/0x10.h"
+#include "algos/kawpow.h"

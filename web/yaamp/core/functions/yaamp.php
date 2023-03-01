@@ -37,6 +37,7 @@ function yaamp_get_algos()
 		'jha',
 		'keccak',
 		'keccakc',
+		'kawpow',
 		'lbk3',
 		'lbry',
 		'luffa',
@@ -135,6 +136,7 @@ function yaamp_algo_mBTC_factor($algo)
         case 'keccakc':
         case 'lbry':
         case 'vanilla':
+		case 'kawpow':
             return 1000;
         default:
             return 1;
@@ -157,6 +159,7 @@ function yaamp_get_algo_norm($algo)
 		'blake'		=> 1.0,
 		'curvehash'	=> 1.0,
 		'keccak'	=> 1.0,
+		'kawpow'	=> 1.0,
 		'lyra2'		=> 1.0,
 		'lyra2v2'	=> 1.0,
 		'lyra2v3'	=> 1.0,
@@ -300,6 +303,7 @@ function getAlgoColors($algo)
 		'padihash' 	=> '#e2d0d2',
 		'pawelhash' 	=> '#e2d0d2',
 		'equihash'	=> '#006994',
+		'kawpow'	=> '#006994',
 
         'MN' => '#ffffff', // MasterNode Earnings
         'PoS' => '#ffffff' // Stake
@@ -380,6 +384,7 @@ function getAlgoPort($algo)
 		'dmd-gr'	=> 5333,
 		'myr-gr'	=> 5433,
 		'zr5'		=> 5533,
+		'kawpow'		=> 5555,
 		// 5555 to 5683 reserved
 		'blake'		=> 5733,
 		'blakecoin'	=> 5743,
