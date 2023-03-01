@@ -1,5 +1,12 @@
-
-CC= gcc -no-pie
+#####################
+# Special credits to the following devs that make this YiiMP stratum possible
+# tpruvot https://github.com/tpruvot/yiimp
+# barrystyle https://github.com/barrystyle
+# Alexg Discord
+# Kudaraidee https://github.com/Kudaraidee/yiimp
+# And all the other devs that have helped with this project
+#####################
+CC=gcc
 
 CFLAGS= -g -march=native
 SQLFLAGS= `mysql_config --cflags --libs`
@@ -11,16 +18,13 @@ CFLAGS += -DNO_EXCHANGE
 #CFLAGS=-c -O2 -I /usr/include/mysql
 LDFLAGS=-O2 `mysql_config --libs`
 
-LDLIBS=iniparser/libiniparser.a algos/libalgos.a sha3/libhash.a -Isecp256k1/include secp256k1/.libs/libsecp256k1.a -lpthread -lgmp -lm -lstdc++ -lssl -lcrypto 
+LDLIBS=iniparser/libiniparser.a algos/libalgos.a sha3/libhash.a -lpthread -lgmp -lm -lstdc++
 LDLIBS+=-lmysqlclient
 
 SOURCES=stratum.cpp db.cpp coind.cpp coind_aux.cpp coind_template.cpp coind_submit.cpp util.cpp list.cpp \
 	rpc.cpp job.cpp job_send.cpp job_core.cpp merkle.cpp share.cpp socket.cpp coinbase.cpp \
 	client.cpp client_submit.cpp client_core.cpp client_difficulty.cpp remote.cpp remote_template.cpp \
-	user.cpp object.cpp json.cpp base58.cpp kawpow.cpp satoshi/uint256.cpp satoshi/utilstrencodings.cpp \
-        ethash/lib/ethash/ethash.cpp ethash/lib/ethash/progpow.cpp \
-        ethash/lib/keccak/keccak.c ethash/lib/keccak/keccakf800.c ethash/lib/keccak/keccakf1600.c ethash/lib/ethash/primes.c \
-        kawpow.cpp
+	user.cpp object.cpp json.cpp base58.cpp
 
 CFLAGS += -DHAVE_CURL
 SOURCES += rpc_curl.cpp
@@ -32,25 +36,16 @@ OUTPUT=stratum
 
 CODEDIR1=algos
 CODEDIR2=sha3
-CODEDIR3=iniparser
-CODEDIR4=secp256k1
 
+.PHONY: projectcode1 projectcode2
 
-.PHONY: projectcode1 projectcode2 projectcode3 projectcode4
-
-all: projectcode1 projectcode2 projectcode3 projectcode4 $(SOURCES) $(OUTPUT)
+all: projectcode1 projectcode2 $(SOURCES) $(OUTPUT)
 
 projectcode1:
 	$(MAKE) -C $(CODEDIR1)
 
 projectcode2:
 	$(MAKE) -C $(CODEDIR2)
-	
-projectcode3:
-	$(MAKE) -C $(CODEDIR3)
-
-projectcode4:
-	cd $(CODEDIR4) && chmod +x autogen.sh && ./autogen.sh && ./configure --enable-experimental --enable-module-ecdh --with-bignum=no --enable-endomorphism && $(MAKE)
 
 $(SOURCES): stratum.h util.h
 
@@ -70,14 +65,8 @@ clean:
 	rm -f sha3/*.o
 	rm -f sha3/*.a
 	rm -f algos/ar2/*.o
-	rm -f algos/blake2/*.o
-	rm -f algos/blake2-ref/*.o
-	rm -f algos/honeycomb/*.o
-	rm -f algos/SWIFFTX/*.o
-	rm -f algos/yespower/*.o
-	
+
 install: clean all
 	strip -s stratum
 	cp stratum /usr/local/bin/
 	cp stratum ../bin/
-
