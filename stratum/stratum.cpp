@@ -94,6 +94,7 @@ static void neoscrypt_hash(const char* input, char* output, uint32_t len)
 
 YAAMP_ALGO g_algos[] =
 {
+	{"kawpow", kawpow_hash, 1, 0, 0},
 	{"a5a", a5a_hash, 0x10000, 0, 0},
 	{"aergo", aergo_hash, 1, 0, 0},
 	{"allium", allium_hash, 0x100, 0, 0},

@@ -19,7 +19,7 @@
 #include <errmsg.h>
 #include <ifaddrs.h>
 #include <dirent.h>
-
+#include "kawpow.h"
 #include <iostream>
 #include <vector>
 
