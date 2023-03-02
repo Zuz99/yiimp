@@ -19,7 +19,7 @@
 #include <errmsg.h>
 #include <ifaddrs.h>
 #include <dirent.h>
-#include "kawpow.h"
+
 #include <iostream>
 #include <vector>
 
@@ -238,3 +238,5 @@ void sha256_double_hash_hex(const char *input, char *output, unsigned int len);
 #include "algos/xevan.h"
 #include "algos/yespower/yespower.h"
 #include "algos/zr5.h"
+#include "algos/gr.h"
+#include "kawpow.h"
