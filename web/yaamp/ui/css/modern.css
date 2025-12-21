@@ -1,0 +1,189 @@
+/*
+ * Modern UI layer for Yiimp (non-breaking).
+ *
+ * Goals:
+ * - Keep legacy Yii/Yiimp views working
+ * - Improve typography, spacing, responsiveness
+ * - Add a gentle dark mode using prefers-color-scheme
+ */
+
+:root {
+  --yiimp-bg: #0b1220;
+  --yiimp-surface: #0f1a2e;
+  --yiimp-surface-2: #111f38;
+  --yiimp-border: rgba(255,255,255,.08);
+  --yiimp-text: rgba(255,255,255,.92);
+  --yiimp-text-2: rgba(255,255,255,.70);
+  --yiimp-link: #7dd3fc;
+  --yiimp-link-hover: #bae6fd;
+}
+
+body.yiimp-modern {
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, Helvetica, sans-serif;
+  background: #f6f7fb;
+  color: #111827;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  body.yiimp-modern {
+    background: var(--yiimp-bg);
+    color: var(--yiimp-text);
+  }
+
+  body.yiimp-modern a { color: var(--yiimp-link); }
+  body.yiimp-modern a:hover { color: var(--yiimp-link-hover); }
+}
+
+/* Headings */
+body.yiimp-modern h1,
+body.yiimp-modern h2,
+body.yiimp-modern h3 {
+  letter-spacing: -0.02em;
+}
+
+/* Common legacy containers */
+body.yiimp-modern .main {
+  padding: 1rem;
+}
+
+/* Tables: make legacy tables look more "bootstrap-like" */
+body.yiimp-modern table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+body.yiimp-modern table th,
+body.yiimp-modern table td {
+  padding: .55rem .6rem;
+  vertical-align: middle;
+}
+
+body.yiimp-modern table th {
+  font-weight: 600;
+}
+
+@media (prefers-color-scheme: dark) {
+  body.yiimp-modern table {
+    background: transparent;
+  }
+  body.yiimp-modern table th,
+  body.yiimp-modern table td {
+    border-bottom: 1px solid var(--yiimp-border);
+  }
+}
+
+/* Cards for blocks that already use generic divs */
+@media (prefers-color-scheme: dark) {
+  body.yiimp-modern .box,
+  body.yiimp-modern .content,
+  body.yiimp-modern .panel {
+    background: var(--yiimp-surface);
+    border: 1px solid var(--yiimp-border);
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0,0,0,.25);
+  }
+}
+
+/* Footer */
+@media (prefers-color-scheme: dark) {
+  body.yiimp-modern .yiimp-footer {
+    color: var(--yiimp-text-2);
+  }
+}
+
+/* Improve legacy "error" blocks */
+body.yiimp-modern .error,
+body.yiimp-modern .alert {
+  border-radius: 12px;
+}
+
+/* =========================================================
+ * Stage 2: modern layout helpers (cards, skeleton, togglable theme)
+ * =======================================================*/
+
+/* Bootstrap theme override (manual toggle) */
+html[data-bs-theme="dark"] body.yiimp-modern {
+  background: var(--yiimp-bg);
+  color: var(--yiimp-text);
+}
+html[data-bs-theme="dark"] body.yiimp-modern a { color: var(--yiimp-link); }
+html[data-bs-theme="dark"] body.yiimp-modern a:hover { color: var(--yiimp-link-hover); }
+
+html[data-bs-theme="light"] body.yiimp-modern {
+  background: #f6f7fb;
+  color: #111827;
+}
+
+/* Cards */
+body.yiimp-modern .yiimp-card {
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: 18px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.08);
+}
+html[data-bs-theme="dark"] body.yiimp-modern .yiimp-card {
+  background: var(--yiimp-surface);
+  border-color: var(--yiimp-border);
+  box-shadow: 0 12px 30px rgba(0,0,0,.25);
+}
+
+/* Metric icon */
+body.yiimp-modern .yiimp-metric-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(13,110,253,.12);
+}
+html[data-bs-theme="dark"] body.yiimp-modern .yiimp-metric-icon {
+  background: rgba(125,211,252,.12);
+}
+
+/* AJAX blocks */
+body.yiimp-modern .yiimp-ajax-block {
+  min-height: 40px;
+}
+
+body.yiimp-modern .yiimp-command {
+  padding: .6rem .75rem;
+  border-radius: 14px;
+  background: rgba(13,110,253,.08);
+  border: 1px solid rgba(13,110,253,.18);
+}
+html[data-bs-theme="dark"] body.yiimp-modern .yiimp-command {
+  background: rgba(125,211,252,.08);
+  border-color: rgba(125,211,252,.18);
+}
+
+/* Make legacy "main-left-box" act like a card without rewriting all HTML */
+body.yiimp-modern .main-left-box {
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,.06);
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(0,0,0,.06);
+}
+html[data-bs-theme="dark"] body.yiimp-modern .main-left-box {
+  background: var(--yiimp-surface);
+  border-color: var(--yiimp-border);
+  box-shadow: 0 12px 30px rgba(0,0,0,.25);
+}
+body.yiimp-modern .main-left-title {
+  padding: .75rem 1rem;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(0,0,0,.06);
+}
+html[data-bs-theme="dark"] body.yiimp-modern .main-left-title {
+  border-bottom-color: var(--yiimp-border);
+}
+body.yiimp-modern .main-left-inner {
+  padding: 1rem;
+}
+
+/* Tables in content: add subtle rounding */
+body.yiimp-modern .table-responsive {
+  border-radius: 16px;
+}
+
