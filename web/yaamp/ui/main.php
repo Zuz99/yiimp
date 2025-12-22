@@ -25,8 +25,11 @@ $pageTitle = empty($this->pageTitle) ? YAAMP_SITE_NAME : YAAMP_SITE_NAME . " - "
 echo '<title>' . $pageTitle . '</title>';
 
 echo CHtml::cssFile("/extensions/jquery/themes/ui-lightness/jquery-ui.css");
-echo CHtml::cssFile('/yaamp/ui/css/main.css');
-echo CHtml::cssFile('/yaamp/ui/css/table.css');
+	echo CHtml::cssFile('/yaamp/ui/css/main.css');
+	echo CHtml::cssFile('/yaamp/ui/css/table.css');
+
+	// Keep theme overrides LAST so it can override main.css/table.css
+	echo CHtml::cssFile('/yaamp/ui/css/themes.css');
 
 //echo CHtml::scriptFile('/extensions/jquery/js/jquery-1.8.3-dev.js');
 //echo CHtml::scriptFile('/extensions/jquery/js/jquery-ui-1.9.1.custom.min.js');
@@ -36,6 +39,8 @@ $cs->registerCoreScript('jquery.ui');
 //$cs->registerScriptFile('/yaamp/ui/js/jquery.tablesorter.js', CClientScript::POS_END);
 
 echo CHtml::scriptFile('/yaamp/ui/js/jquery.tablesorter.js');
+	// Dark mode only + sidebar toggle
+	echo CHtml::scriptFile('/yaamp/ui/js/theme-switcher.js');
 
 // if(!controller()->admin)
 // echo <<<end
@@ -82,15 +87,42 @@ function showItemHeader($selected, $url, $name)
 
 function showPageHeader()
 {
+    // Modern topbar + sidebar (UI only)
     echo '<div class="tabmenu-out">';
-    echo '<a href="/"><img src="/images/logo.png"></a>';
     echo '<div class="tabmenu-inner">';
-
-    echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/">' . YAAMP_SITE_NAME . '</a>';
+    echo '<div class="topbar-left">';
+    echo '<button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Menu">&#9776;</button>';
+    echo '<div class="topbar-brand"><span class="name">'.YAAMP_SITE_NAME.'</span><span class="hint">Navigation</span></div>';
+    echo '</div>';
+	// Theme switcher removed (dark mode only)
+    echo '<span class="topbar-right">';
 
     $action = controller()->action->id;
     $wallet = user()->getState('yaamp-wallet');
     $ad     = isset($_GET['address']);
+
+    $mining      = getdbosql('db_mining');
+    $nextpayment = date('H:i T', $mining->last_payout + YAAMP_PAYMENTS_FREQ);
+    // $nextpayment = date('H:i', $mining->last_payout+YAAMP_PAYMENTS_FREQ) . ' UTC (US)';
+    // define('UTCEUR', 7200);
+    // $nextpaymentEUR = date('H:i', $mining->last_payout+YAAMP_PAYMENTS_FREQ+UTCEUR); // . ' UTC+2 (EUR)';
+    $eta         = ($mining->last_payout + YAAMP_PAYMENTS_FREQ) - time();
+    $eta_mn      = 'in ' . round($eta / 60) . ' minutes';
+
+    echo '<span id="nextpayout" style="font-size: .8em;" title="' . $eta_mn . '">Next Payout: ' . $nextpayment . '</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+    // echo '<span id="nextpayout" style="font-size: .8em;" title="'.$eta_mn.'">Next Payout: '.$nextpayment.' / '.$nextpaymentEUR.'</span>';
+    // echo '<span id="nextpayout" style="font-size: .8em;" title="'.$eta_mn.'">Next Payout: '.$nextpayment.' UTC (US) / '.$nextpaymentEUR.' UTC+2 (EUR)</span>';
+
+    echo "</span>";
+    echo "</div>";
+    echo "</div>";
+
+    // Sidebar (desktop always visible, mobile via toggle)
+    echo '<div class="app-sidebar" id="appSidebar">';
+    echo '<div class="sidebar-brand"><a href="/"><img src="/images/logo.png" alt="Logo"></a>';
+    echo '<div><div class="sidebar-title">'.YAAMP_SITE_NAME.'</div><div class="sidebar-sub">Menu</div></div></div>';
+
+    echo '<div class="sidebar-nav">';
 
     showItemHeader(controller()->id == 'site' && $action == 'index' && !$ad, '/', 'Home');
     showItemHeader($action == 'mining', '/site/mining', 'Pool');
@@ -115,32 +147,19 @@ function showPageHeader()
         showItemHeader(controller()->id == 'site' && $action == 'admin', "/site/admin", 'Wallets');
 
         if (YAAMP_RENTAL)
-            showItemHeader(controller()->id == 'renting' && $action == 'admin', '/renting/admin', 'Jobs');
-
-        if (YAAMP_ALLOW_EXCHANGE)
-            showItemHeader(controller()->id == 'trading', '/trading', 'Trading');
+            showItemHeader(controller()->id == 'renting' && $action == 'admin', '/renting/admin', 'Rental admin');
 
         if (YAAMP_USE_NICEHASH_API)
             showItemHeader(controller()->id == 'nicehash', '/nicehash', 'Nicehash');
     }
 
-    echo '<span style="float: right;">';
+    echo '</div>'; // sidebar-nav
 
-    $mining      = getdbosql('db_mining');
-    $nextpayment = date('H:i T', $mining->last_payout + YAAMP_PAYMENTS_FREQ);
-    // $nextpayment = date('H:i', $mining->last_payout+YAAMP_PAYMENTS_FREQ) . ' UTC (US)';
-    // define('UTCEUR', 7200);
-    // $nextpaymentEUR = date('H:i', $mining->last_payout+YAAMP_PAYMENTS_FREQ+UTCEUR); // . ' UTC+2 (EUR)';
-    $eta         = ($mining->last_payout + YAAMP_PAYMENTS_FREQ) - time();
-    $eta_mn      = 'in ' . round($eta / 60) . ' minutes';
-
-    echo '<span id="nextpayout" style="font-size: .8em;" title="' . $eta_mn . '">Next Payout: ' . $nextpayment . '</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-    // echo '<span id="nextpayout" style="font-size: .8em;" title="'.$eta_mn.'">Next Payout: '.$nextpayment.' / '.$nextpaymentEUR.'</span>';
-    // echo '<span id="nextpayout" style="font-size: .8em;" title="'.$eta_mn.'">Next Payout: '.$nextpayment.' UTC (US) / '.$nextpaymentEUR.' UTC+2 (EUR)</span>';
-
-    echo "</div>";
-    echo "</div>";
+    // theme select exists in topbar; keep sidebar clean
+    echo '</div>'; // app-sidebar
+    echo '<div class="app-backdrop" id="appBackdrop"></div>';
 }
+
 
 function showPageFooter()
 {

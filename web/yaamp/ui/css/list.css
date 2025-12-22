@@ -34,12 +34,12 @@
 {
 	font-size: 16px;
 	font-weight: bold;
-	color: rgba(255,255,255,0.92);
+	color: #333;
 }
 
 .tweetshow-screen-name
 {
-	color: rgba(255,255,255,0.60);
+	color: #999;
 	font-size: 14px;
 }
 
