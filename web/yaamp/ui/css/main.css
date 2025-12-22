@@ -8,30 +8,54 @@
 body
 
 {
+	/* Base (legacy styles kept, then overridden below for a modern UI) */
 	color: #fff;
 	text-align: left;
 	margin: 0;
 	padding: 0;
 	scroll: no;
-	font-family: Verdana, Geneva, sans-serif;
-	font-size: 10pt;
-	background-color: #32373c;
-	background-image: url(/images/base/background.png);
-        background-position: center;
+	font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+	font-size: 11pt;
+	line-height: 1.45;
+	background-color: #0b1220;
+	background-image:
+		radial-gradient(1200px 600px at 20% -10%, rgba(56, 189, 248, 0.20), transparent 60%),
+		radial-gradient(900px 500px at 90% 0%, rgba(99, 102, 241, 0.18), transparent 55%),
+		radial-gradient(800px 500px at 50% 120%, rgba(16, 185, 129, 0.10), transparent 55%),
+		url(/images/base/background.png);
+	background-position: center;
 	background-repeat: no-repeat;
-        background-attachment: fixed;
+	background-attachment: fixed;
+	background-size: cover;
+}
+
+:root
+{
+	--bg: #0b1220;
+	--surface: rgba(255, 255, 255, 0.06);
+	--surface-2: rgba(255, 255, 255, 0.09);
+	--border: rgba(255, 255, 255, 0.10);
+	--text: rgba(255, 255, 255, 0.92);
+	--muted: rgba(255, 255, 255, 0.70);
+	--muted-2: rgba(255, 255, 255, 0.55);
+	--accent: #38bdf8;
+	--accent-2: #a78bfa;
+	--success: #34d399;
+	--danger: #fb7185;
+	--shadow: 0 10px 30px rgba(0,0,0,0.35);
+	--radius: 16px;
 }
 
 a, a:visited
 {
-	color: #ffffff;
+	color: var(--text);
 	background: inherit;
 	text-decoration: none;
 }
 
 a:hover
 {
-	color: #4ca6b3;
+	color: var(--accent);
 	background: inherit;
 	text-decoration: underline;
 }
@@ -44,8 +68,9 @@ img
 
 h2
 {
-	margin: 20px 0 0px 25px;
-	font-size: 1.4em;
+	margin: 18px 0 10px 0;
+	font-size: 1.35em;
+	letter-spacing: 0.2px;
 }
 
 hr
@@ -89,43 +114,75 @@ hr
 	right: 0px;
 	left: 0px;
 	z-index: 20;
-	height: 40px;
-	color: #fff;
-
-	background-image: url(/images/base/top_header.png);
-	background-repeat: repeat-x;
-	
-	-webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, .25);
-	box-shadow: 0 2px 3px rgba(0, 0, 0, .25);
+	height: 58px;
+	color: var(--text);
+	background: rgba(10, 15, 25, 0.70);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	border-bottom: 1px solid var(--border);
+	box-shadow: 0 10px 25px rgba(0, 0, 0, .35);
 }
 
 .page .tabmenu-out img
 {
 	position: fixed;
-	top: 4px;
-	left: 30px;
-	height: 32px;
+	top: 10px;
+	left: 18px;
+	height: 38px;
+	filter: drop-shadow(0 6px 12px rgba(0,0,0,0.35));
 }
 
 .page .tabmenu-inner
 {
-	font-size: 1.1em;
-	font-weight: bold;
-	padding: 10px;
+	font-size: 0.98em;
+	font-weight: 600;
+	padding: 12px 16px 12px 72px;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	white-space: nowrap;
+	overflow-x: auto;
+	scrollbar-width: none;
 }
+
+.page .tabmenu-inner::-webkit-scrollbar { display: none; }
 
 .page .tabmenu-inner a
 {
 	text-decoration: none;
-	padding: 10px;
-	color: #ffffff;
+	padding: 8px 10px;
+	color: var(--muted);
+	border-radius: 999px;
+	transition: background-color .15s ease, color .15s ease;
+}
+
+.page .tabmenu-inner a:hover
+{
+	text-decoration: none;
+	background: rgba(255,255,255,0.08);
+	color: var(--text);
 }
 
 .page .tabmenu-inner .selected
 {
-	color: #4ca6b3;
-	background-image: url(/images/base/top_header_selected.png);
-	background-repeat: no-repeat;
+	color: #001018;
+	background: linear-gradient(135deg, rgba(56, 189, 248, 0.95), rgba(167, 139, 250, 0.85));
+	box-shadow: 0 10px 18px rgba(0,0,0,0.25);
+}
+
+/* "float: right" area in header: keep it aligned without changing PHP */
+.page .tabmenu-inner span[style*="float: right"]
+{
+	float: none !important;
+	margin-left: auto;
+	display: flex;
+	align-items: center;
+}
+
+#nextpayout
+{
+	color: var(--muted-2);
+	font-weight: 600;
 }
 
 
@@ -141,24 +198,33 @@ hr
 
 .page .content-out
 {
-	padding: 36px 0px 0px 0px;
+	padding: 78px 0px 0px 0px;
 }
 
 .page .content-inner
 {
-	padding: 10px;
+	padding: 22px;
+	max-width: 1200px;
+	margin: 18px auto 26px auto;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
 }
 
 /* ---------------------------------------------- */
 
 .page .footer
 {
-	font-size: 0.8em;
-	font-weight: bold;
+	font-size: 0.85em;
+	font-weight: 600;
 	text-align: center;
-	padding: 10px;
-	background-color: #41464b;
-	color: #fff;
+	padding: 18px 10px;
+	background: rgba(10, 15, 25, 0.65);
+	border-top: 1px solid var(--border);
+	color: var(--muted);
 }
 
 .page .footer p
@@ -171,22 +237,25 @@ hr
 
 .main-left-box
 {
-	border: 1px solid #7d7d7d;
-	border-radius: 5px;
+	border: 1px solid var(--border);
+	border-radius: 14px;
+	background: rgba(255,255,255,0.05);
+	box-shadow: 0 10px 18px rgba(0,0,0,0.25);
 }
 
 .main-left-title
 {
-	padding: 8px;
-	background-color: #41464b;
-	font-weight: bold;
-        color: #fff;
+	padding: 10px 12px;
+	background: rgba(255,255,255,0.06);
+	font-weight: 700;
+	color: var(--text);
+	border-bottom: 1px solid var(--border);
 }
 
 .main-left-inner
 {
-	padding: 5px;
-        color: #fff;
+	padding: 10px 12px;
+	color: var(--text);
 }
 
 .main-left-inner ul
@@ -197,25 +266,70 @@ hr
 
 .main-left-inner li
 {
-	padding: 5px;
+	padding: 7px 4px;
 	list-style: none;
-	font-size: 1.0em;
+	font-size: 0.98em;
 }
 
 .main-text-input
 {
 	width: 98%;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-	padding: 5px;
+	border: 1px solid var(--border);
+	border-radius: 12px;
+	padding: 10px 12px;
+	background: rgba(255,255,255,0.06);
+	color: var(--text);
+	outline: none;
+}
+
+.main-text-input:focus
+{
+	border-color: rgba(56, 189, 248, 0.55);
+	box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.14);
 }
 
 .main-submit-button
 {
 	width: 80px;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-	padding: 5px;
+	border: 1px solid rgba(255,255,255,0.14);
+	border-radius: 12px;
+	padding: 9px 12px;
+	background: rgba(255,255,255,0.08);
+	color: var(--text);
+	cursor: pointer;
+	transition: transform .06s ease, background-color .15s ease;
+}
+
+.main-submit-button:hover { background: rgba(255,255,255,0.12); }
+.main-submit-button:active { transform: translateY(1px); }
+
+/* Make legacy jQuery UI messages look nicer without touching JS */
+.ui-state-highlight, .ui-state-error
+{
+	border-radius: 14px !important;
+	border: 1px solid var(--border) !important;
+	background: rgba(255,255,255,0.08) !important;
+}
+
+.ui-state-error
+{
+	background: rgba(251, 113, 133, 0.12) !important;
+}
+
+/* Responsive */
+@media (max-width: 820px)
+{
+	.page .tabmenu-inner
+	{
+		padding-left: 64px;
+		font-size: 0.95em;
+	}
+
+	.page .content-inner
+	{
+		margin: 12px 10px 22px 10px;
+		padding: 16px;
+	}
 }
 
 /* ---------------------------------------------- */
