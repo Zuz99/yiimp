@@ -1,20 +1,12 @@
 
 #include "stratum.h"
 
-double client_normalize_difficulty(double difficulty, YAAMP_CLIENT *client)
+double client_normalize_difficulty(double difficulty)
 {
-	if (client->is_nicehash) {
-		if(difficulty < g_stratum_nicehash_min_diff) difficulty = g_stratum_nicehash_min_diff;
-		else if(difficulty < 1) difficulty = floor(difficulty*1000/2)/1000*2;
-		else if(difficulty > 1) difficulty = floor(difficulty/2)*2;
-		if(difficulty > g_stratum_nicehash_max_diff) difficulty = g_stratum_nicehash_max_diff;
-	}
-	else {
-		if(difficulty < g_stratum_min_diff) difficulty = g_stratum_min_diff;
-		else if(difficulty < 1) difficulty = floor(difficulty*1000/2)/1000*2;
-		else if(difficulty > 1) difficulty = floor(difficulty/2)*2;
-		if(difficulty > g_stratum_max_diff) difficulty = g_stratum_max_diff;
-	}
+	if(difficulty < g_stratum_min_diff) difficulty = g_stratum_min_diff;
+	else if(difficulty < 1) difficulty = floor(difficulty*1000/2)/1000*2;
+	else if(difficulty > 1) difficulty = floor(difficulty/2)*2;
+	if(difficulty > g_stratum_max_diff) difficulty = g_stratum_max_diff;
 	return difficulty;
 }
 
@@ -40,7 +32,7 @@ void client_change_difficulty(YAAMP_CLIENT *client, double difficulty)
 {
 	if(difficulty <= 0) return;
 
-	difficulty = client_normalize_difficulty(difficulty, client);
+	difficulty = client_normalize_difficulty(difficulty);
 	if(difficulty <= 0) return;
 
 //	debuglog("change diff to %f %f\n", difficulty, client->difficulty_actual);
@@ -84,33 +76,10 @@ int client_send_difficulty(YAAMP_CLIENT *client, double difficulty)
 //	debuglog("%s diff %f\n", client->sock->ip, difficulty);
 	client->shares_per_minute = YAAMP_SHAREPERSEC;
 
-	bool is_equihash = (strstr(g_current_algo->name, "equihash") == g_current_algo->name);
-	if (is_kawpow || is_firopow || is_phihash || is_meowpow)
-	{
-		uint256 share_target;
-		diff_to_target(share_target, difficulty);
-	
-		client->share_target = share_target;
-		client_call(client, "mining.set_target", "[\"%s\"]", client->share_target.ToString().c_str());
-		client->next_target = share_target;
-	
-	}
-	else if(is_equihash) {
-		uint32_t user_target[32];
-		diff_to_target_equi(user_target, difficulty);
-		char user_target_hex[128]; memset(user_target_hex,0,128);
-		char user_target_hex_reversed[128]; memset(user_target_hex_reversed,0,128);
-		hexlify(user_target_hex, (uchar*)user_target, 32);
-		string_be(user_target_hex, user_target_hex_reversed);
-
-		client_call(client, "mining.set_target", "[\"%s\"]", user_target_hex_reversed);
-	}
-	else {
-		if(difficulty >= 1)
-			client_call(client, "mining.set_difficulty", "[%.0f]", difficulty);
-		else
-			client_call(client, "mining.set_difficulty", "[%0.8f]", difficulty);
-	}
+	if(difficulty >= 1)
+		client_call(client, "mining.set_difficulty", "[%.0f]", difficulty);
+	else
+		client_call(client, "mining.set_difficulty", "[%0.8f]", difficulty);
 	return 0;
 }
 
@@ -120,21 +89,14 @@ void client_initialize_difficulty(YAAMP_CLIENT *client)
 	char *p2 = strstr(client->password, "decred=");
 	if(!p || p2) return;
 
-	if (is_kawpow || is_firopow || is_phihash || is_meowpow)
-	{
-		client->difficulty_actual = g_stratum_difficulty;
-		diff_to_target(client->share_target, client->difficulty_actual);
-	}
-	else {
-		double diff = client_normalize_difficulty(atof(p+2), client);
-		uint64_t user_target = diff_to_target(diff);
+	double diff = client_normalize_difficulty(atof(p+2));
+	uint64_t user_target = diff_to_target(diff);
 
-	//	debuglog("%016llx target\n", user_target);
-		if(user_target >= YAAMP_MINDIFF && user_target <= YAAMP_MAXDIFF)
-		{
-			client->difficulty_actual = diff;
-			client->difficulty_fixed = true;
-		}
+//	debuglog("%016llx target\n", user_target);
+	if(user_target >= YAAMP_MINDIFF && user_target <= YAAMP_MAXDIFF)
+	{
+		client->difficulty_actual = diff;
+		client->difficulty_fixed = true;
 	}
 
 }
