@@ -1,0 +1,872 @@
+/*
+  Modern Yiimp UI skin (Top Menu + Themes)
+  v7 - header cleanup + responsive home table layout (fix clipped right column)
+*/
+
+/* ---------- Theme variables ---------- */
+:root{
+  --text:#e9ecf4;
+  --muted:#9aa4b2;
+  --border:rgba(255,255,255,.10);
+  --shadow:0 14px 40px rgba(0,0,0,.45);
+
+  /* base backgrounds (can be gradients) */
+  --bg:
+    radial-gradient(1100px circle at 18% -10%, rgba(47,128,255,.18), transparent 55%),
+    radial-gradient(900px circle at 92% 10%, rgba(255,59,87,.13), transparent 45%),
+    #05070c;
+  --panel:rgba(13,18,32,.86);
+  --panel2:rgba(255,255,255,.04);
+
+  --accent:#2f80ff;
+  --accent2:#ff3b57;
+  --accentGlow:rgba(47,128,255,.22);
+  --selBg:rgba(47,128,255,.12);
+  --selBorder:rgba(47,128,255,.25);
+  --accentGrad:linear-gradient(90deg, rgba(47,128,255,.60), rgba(255,59,87,.46));
+
+  /* components */
+  --topbarBg:rgba(7,10,18,.84);
+  --topbarGlass:blur(10px);
+  --brandBg:rgba(255,255,255,.04);
+  --cardBg:rgba(255,255,255,.03);
+  --cardHeaderBg:rgba(255,255,255,.05);
+  --inputBg:rgba(255,255,255,.045);
+  --tableHeadBg:rgba(255,255,255,.06);
+  --rowHover:rgba(255,255,255,.05);
+  /* Keep tables blending with their parent boxes (no separate block background) */
+  --tableBg:transparent;
+  --codeBg:rgba(0,0,0,.26);
+  --footerBg:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+}
+
+/* Theme: Midnight (Blue/Red) */
+body.theme-midnight{
+  --bg:
+    radial-gradient(1200px circle at 20% -10%, rgba(47,128,255,.20), transparent 55%),
+    radial-gradient(900px circle at 90% 10%, rgba(255,59,87,.14), transparent 45%),
+    #05070c;
+  --panel:rgba(13,18,32,.88);
+  --accent:#2f80ff;
+  --accent2:#ff3b57;
+  --accentGlow:rgba(47,128,255,.24);
+  --selBg:rgba(47,128,255,.14);
+  --selBorder:rgba(47,128,255,.26);
+  --accentGrad:linear-gradient(90deg, rgba(47,128,255,.70), rgba(255,59,87,.50));
+  --topbarBg:rgba(7,10,18,.86);
+  --cardHeaderBg:rgba(255,255,255,.055);
+  --tableHeadBg:rgba(47,128,255,.10);
+}
+
+/* Theme: Ocean (Blue/Teal) */
+body.theme-ocean{
+  --bg:
+    radial-gradient(1200px circle at 15% -10%, rgba(0,179,255,.22), transparent 55%),
+    radial-gradient(900px circle at 88% 18%, rgba(0,245,212,.16), transparent 45%),
+    #040a10;
+  --panel:rgba(6,18,28,.88);
+  --accent:#00b3ff;
+  --accent2:#00f5d4;
+  --accentGlow:rgba(0,179,255,.22);
+  --selBg:rgba(0,245,212,.12);
+  --selBorder:rgba(0,245,212,.26);
+  --accentGrad:linear-gradient(90deg, rgba(0,179,255,.70), rgba(0,245,212,.50));
+  --topbarBg:rgba(3,12,18,.86);
+  --cardHeaderBg:rgba(0,179,255,.10);
+  --tableHeadBg:rgba(0,245,212,.10);
+}
+
+/* Theme: Crimson (Red/Gold) */
+body.theme-crimson{
+  --bg:
+    radial-gradient(1200px circle at 20% -10%, rgba(255,59,87,.20), transparent 55%),
+    radial-gradient(900px circle at 90% 18%, rgba(255,196,0,.14), transparent 45%),
+    #0b0507;
+  --panel:rgba(24,10,14,.90);
+  --accent:#ff3b57;
+  --accent2:#ffc400;
+  --accentGlow:rgba(255,59,87,.22);
+  --selBg:rgba(255,196,0,.12);
+  --selBorder:rgba(255,196,0,.25);
+  --accentGrad:linear-gradient(90deg, rgba(255,59,87,.70), rgba(255,196,0,.52));
+  --topbarBg:rgba(16,7,9,.86);
+  --cardHeaderBg:rgba(255,59,87,.12);
+  --tableHeadBg:rgba(255,196,0,.11);
+}
+
+/* Theme: Emerald (Green/Blue) */
+body.theme-emerald{
+  --bg:
+    radial-gradient(1200px circle at 18% -10%, rgba(0,208,132,.22), transparent 55%),
+    radial-gradient(900px circle at 92% 18%, rgba(0,163,255,.14), transparent 45%),
+    #050b08;
+  --panel:rgba(10,18,16,.90);
+  --accent:#00d084;
+  --accent2:#00a3ff;
+  --accentGlow:rgba(0,208,132,.20);
+  --selBg:rgba(0,208,132,.14);
+  --selBorder:rgba(0,208,132,.26);
+  --accentGrad:linear-gradient(90deg, rgba(0,208,132,.70), rgba(0,163,255,.48));
+  --topbarBg:rgba(6,14,12,.86);
+  --cardHeaderBg:rgba(0,208,132,.11);
+  --tableHeadBg:rgba(0,163,255,.10);
+}
+
+/* Theme: Aurora (Cyan/Purple) */
+body.theme-aurora{
+  --bg:
+    radial-gradient(1200px circle at 18% -10%, rgba(45,212,191,.20), transparent 55%),
+    radial-gradient(900px circle at 92% 18%, rgba(167,139,250,.16), transparent 45%),
+    #050610;
+  --panel:rgba(10,10,22,.90);
+  --accent:#2dd4bf;
+  --accent2:#a78bfa;
+  --accentGlow:rgba(167,139,250,.22);
+  --selBg:rgba(167,139,250,.14);
+  --selBorder:rgba(167,139,250,.28);
+  --accentGrad:linear-gradient(90deg, rgba(45,212,191,.65), rgba(167,139,250,.55));
+  --topbarBg:rgba(8,8,18,.86);
+  --cardHeaderBg:rgba(167,139,250,.12);
+  --tableHeadBg:rgba(45,212,191,.10);
+}
+
+/* Theme: Rainbow (Pelangi) */
+body.theme-rainbow{
+  --bg:
+    radial-gradient(1200px circle at 15% -10%, rgba(255,0,76,.20), transparent 55%),
+    radial-gradient(900px circle at 90% 10%, rgba(255,149,0,.16), transparent 45%),
+    radial-gradient(900px circle at 18% 100%, rgba(0,208,132,.12), transparent 55%),
+    radial-gradient(1100px circle at 100% 100%, rgba(123,97,255,.12), transparent 55%),
+    #04060b;
+  --panel:rgba(9,14,28,.90);
+  --accent:#7b61ff;   /* link */
+  --accent2:#00e0ff;  /* hover */
+  --accentGlow:rgba(123,97,255,.22);
+  --selBg:rgba(255,255,255,.06);
+  --selBorder:rgba(255,255,255,.18);
+  --accentGrad:linear-gradient(90deg,
+    rgba(255, 0, 76, .62),
+    rgba(255, 149, 0, .62),
+    rgba(255, 213, 0, .52),
+    rgba(0, 208, 132, .50),
+    rgba(0, 163, 255, .58),
+    rgba(123, 97, 255, .58),
+    rgba(255, 79, 216, .58)
+  );
+  --topbarBg:rgba(6,8,14,.86);
+  --cardHeaderBg:rgba(255,255,255,.055);
+  --tableHeadBg:rgba(255,255,255,.07);
+}
+
+/* ---------- Base ---------- */
+html, body { height: 100%; }
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  background: var(--bg) !important;
+  color: var(--text) !important;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", Arial, sans-serif;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a, a:visited { color: var(--accent); }
+a:hover { color: var(--accent2); text-decoration: none; }
+hr { border-top: 1px solid var(--border); }
+
+/* ---------- Top menu (tabmenu) ---------- */
+.page .tabmenu-out {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--topbarBg);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  backdrop-filter: var(--topbarGlass);
+  -webkit-backdrop-filter: var(--topbarGlass);
+}
+.page .tabmenu-out::before{
+  content:'';
+  position:absolute;
+  left:0; right:0; top:0;
+  height:3px;
+  background: var(--accentGrad);
+  opacity:.9;
+}
+
+.page .tabmenu-inner {
+  /* full width header so brand/logo can sit at the very left */
+  max-width: 100%;
+  margin: 0;
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.page .tabmenu-inner .brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  /* simpler brand: logo at the corner, no "pill" */
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+}
+
+
+.page .tabmenu-inner .brand .brand-link{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  text-decoration:none;
+}
+.page .tabmenu-inner .brand .brand-logo{
+  width:26px;
+  height:26px;
+  object-fit:contain;
+  border-radius:6px;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.12);
+  padding: 3px;
+  box-shadow: none;
+}
+.page .tabmenu-inner .brand .brand-text{
+  color: var(--text);
+  font-weight: 800;
+  letter-spacing: .2px;
+  white-space: nowrap;
+}
+
+.page .tabmenu-inner .brand a {
+  padding: 0;
+  color: var(--text);
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.page .tabmenu-inner .nav {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  min-width: 200px;
+}
+
+.page .tabmenu-inner .nav-item { display: inline-flex; }
+
+.page .tabmenu-inner a {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 12px;
+  color: var(--muted);
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  border: 1px solid transparent;
+  background-image: none !important;
+  text-decoration: none;
+}
+
+.page .tabmenu-inner a:hover {
+  background: var(--cardHeaderBg);
+  border-color: rgba(255, 255, 255, 0.10);
+  color: var(--text);
+}
+
+.page .tabmenu-inner .selected {
+  color: var(--text);
+  background: var(--selBg);
+  border-color: var(--selBorder);
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.0), 0 0 0 3px var(--accentGlow);
+}
+
+/* Rainbow extra pop: selected item gets gradient */
+body.theme-rainbow .page .tabmenu-inner .selected {
+  background: var(--accentGrad);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.page .tabmenu-inner .header-tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 14px;
+  position: relative;
+}
+
+/* neat divider between menu and tools (not a full-height line) */
+.page .tabmenu-inner .header-tools::before{
+  content:'';
+  position:absolute;
+  left:0;
+  top:50%;
+  transform: translateY(-50%);
+  width:1px;
+  height:26px;
+  background: var(--border);
+  opacity:.9;
+}
+
+.page .tabmenu-inner .theme-label {
+  font-size: 0.85em;
+  color: var(--muted);
+  user-select: none;
+}
+
+.page .tabmenu-inner .theme-picker {
+  height: 34px;
+  max-width: 190px;
+}
+
+.page .tabmenu-inner #nextpayout {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: var(--inputBg);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Mobile: prevent header from becoming messy */
+@media (max-width: 900px) {
+  .page .tabmenu-inner {
+    align-items: stretch;
+    flex-wrap: wrap;
+  }
+  .page .tabmenu-inner .nav {
+    order: 3;
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 4px;
+  }
+  .page .tabmenu-inner .nav::-webkit-scrollbar { height: 8px; }
+  .page .tabmenu-inner .header-tools {
+    order: 2;
+    border-left: none;
+    padding-left: 0;
+    margin-left: auto;
+  }
+}
+
+/* ---------- Content layout ---------- */
+.page .content-out {
+  padding: 0 !important;
+  min-height: calc(100vh - 60px);
+}
+
+.page .content-inner {
+  padding: 18px 14px 28px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/*
+  Yiimp home page layout uses a 2-column <table cellspacing=20 width=100%>.
+  On typical screens at 100% zoom, the right column gets clipped.
+  Convert it to a stacked layout on narrower viewports.
+*/
+@media (max-width: 1700px) {
+  .page .content-inner > table[cellspacing="20"][width="100%"] {
+    display: block !important;
+    width: 100% !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    margin: 0 !important;
+  }
+  .page .content-inner > table[cellspacing="20"][width="100%"] > tbody,
+  .page .content-inner > table[cellspacing="20"][width="100%"] > tbody > tr,
+  .page .content-inner > table[cellspacing="20"][width="100%"] > tbody > tr > td {
+    display: block !important;
+    width: 100% !important;
+  }
+  .page .content-inner > table[cellspacing="20"][width="100%"] > tbody > tr > td {
+    padding: 0 !important;
+  }
+  .page .content-inner > table[cellspacing="20"][width="100%"] > tbody > tr > td + td {
+    margin-top: 16px;
+  }
+}
+
+.page .main { padding: 0 !important; }
+
+
+/* ---------- Panels / Boxes (site results) ---------- */
+.main-left-box,
+.main-right-box,
+.main-box {
+  background: var(--cardBg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.main-left-title,
+.main-right-title,
+.main-box-title {
+  background: var(--cardHeaderBg);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 12px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  color: var(--text);
+  position: relative;
+}
+
+.main-left-title::after,
+.main-right-title::after,
+.main-box-title::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 2px;
+  background: var(--accentGrad);
+  opacity: 0.9;
+}
+
+.main-left-inner,
+.main-right-inner,
+.main-box-inner {
+  padding: 12px;
+  background: transparent;
+}
+
+
+h2 {
+  margin: 18px 0 10px 0 !important;
+  font-size: 1.35em;
+}
+
+/* ---------- Footer ---------- */
+.page .footer {
+  background: var(--footerBg);
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+}
+.page .footer a { color: var(--accent); }
+.page .footer a:hover { color: var(--accent2); }
+
+/* ---------- Form controls ---------- */
+input, select, textarea,
+.main-text-input, .main-walletinput, .main-textarea {
+  background: var(--inputBg) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px;
+  padding: 8px 10px;
+}
+
+input::placeholder, textarea::placeholder { color: rgba(233,236,244,.45); }
+
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.20) !important;
+  box-shadow: 0 0 0 3px var(--accentGlow);
+}
+
+.main-text-input, .main-submit-button {
+  border-color: var(--border) !important;
+  border-radius: 12px;
+}
+
+/* API page inline blocks (override hard-coded #ffffee) */
+p.main-left-box, pre.main-left-box {
+  background-color: var(--codeBg) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+}
+pre.main-left-box{ border-radius: 14px; }
+pre{ white-space: pre-wrap; word-break: break-word; }
+
+/* ---------- Tables (override table.css) ---------- */
+/* Also normalize any plain tables used by some pages */
+.main table { color: var(--text) !important; }
+.main table th { color: var(--text) !important; }
+.main table td { color: var(--text) !important; }
+
+table.dataGrid,
+table.dataGrid2,
+table.reportgrid1 {
+  width: 100%;
+  margin: 0;
+  color: var(--text) !important;
+  background: var(--tableBg) !important;
+  /* remove the extra table "card" look so it matches the box background */
+  border: none !important;
+  border-radius: 0;
+  border-collapse: separate !important;
+  border-spacing: 0;
+}
+
+table.dataGrid th, table.dataGrid2 th, table.reportgrid1 th {
+  background: var(--tableHeadBg) !important;
+  color: var(--text) !important;
+  border-bottom: 1px solid var(--border) !important;
+  font-weight: 800;
+  letter-spacing: .15px;
+}
+
+table.dataGrid td, table.dataGrid2 td, table.reportgrid1 td {
+  background: transparent !important;
+  color: var(--text) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+/* Ensure headers/cells never fall back to #555 from legacy CSS */
+table.dataGrid *, table.dataGrid2 *, table.reportgrid1 * { color: inherit !important; }
+
+/* Subtle row striping for readability on gradients */
+table.dataGrid tbody tr:nth-child(even) td,
+table.dataGrid2 tbody tr:nth-child(even) td,
+table.reportgrid1 tbody tr:nth-child(even) td {
+  background: rgba(255,255,255,.02) !important;
+}
+
+table.dataGrid tbody, table.dataGrid2 tbody, table.reportgrid1 tbody {
+  background: transparent !important;
+  border: none !important;
+}
+
+table.reportgrid1 tr.odd td { background: rgba(255,255,255,.03) !important; }
+
+table.dataGrid a, table.dataGrid2 a, table.reportgrid1 a,
+table.dataGrid a:visited, table.dataGrid2 a:visited, table.reportgrid1 a:visited {
+  color: var(--accent) !important;
+}
+
+table.dataGrid th.tablesorter-headerAsc,
+table.dataGrid th.tablesorter-headerDesc,
+table.dataGrid2 th.tablesorter-headerAsc,
+table.dataGrid2 th.tablesorter-headerDesc {
+  color: var(--text) !important;
+}
+
+.ssrow:hover { background-color: var(--rowHover) !important; }
+.ssselected { background-color: var(--selBg) !important; }
+
+/* Make tables blend with their parent panels */
+.main-left-inner table.dataGrid,
+.main-right-inner table.dataGrid,
+.main-left-inner table.dataGrid2,
+.main-right-inner table.dataGrid2,
+.main-left-inner table.reportgrid1,
+.main-right-inner table.reportgrid1 {
+  background: var(--tableBg) !important;
+}
+
+
+/* ---------- jQuery UI message boxes (blend) ---------- */
+.ui-state-highlight,
+.ui-state-error {
+  background-image: none !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 14px;
+}
+
+
+/* ---------- Theme style differences (not only colors) ---------- */
+/* Ocean: glass panels */
+body.theme-ocean .main-left-box,
+body.theme-ocean .main-right-box,
+body.theme-ocean .main-box{
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-color: rgba(0,245,212,.18);
+  box-shadow: 0 18px 55px rgba(0,0,0,.55);
+}
+
+/* Crimson: punchy solid + sharper */
+body.theme-crimson .main-left-box,
+body.theme-crimson .main-right-box,
+body.theme-crimson .main-box{
+  border-radius: 12px;
+  background: rgba(0,0,0,.24);
+  box-shadow: 0 22px 70px rgba(0,0,0,.60);
+}
+
+/* Emerald: subtle grid texture */
+body.theme-emerald::before{
+  content:'';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,.05) 1px, transparent 1px);
+  background-size: 42px 42px;
+  opacity: .18;
+}
+
+/* Aurora: neon outline */
+body.theme-aurora .main-left-box,
+body.theme-aurora .main-right-box,
+body.theme-aurora .main-box{
+  border-color: rgba(167,139,250,.22);
+  box-shadow: 0 0 0 1px rgba(45,212,191,.10) inset, 0 22px 70px rgba(0,0,0,.60);
+}
+
+/* Rainbow: animated accent strip + playful glow */
+@keyframes yiimp-rainbow {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+body.theme-rainbow .tabmenu-out::before{
+  animation: yiimp-rainbow 6s linear infinite;
+}
+
+body.theme-rainbow .main-left-title::after,
+body.theme-rainbow .main-right-title::after,
+body.theme-rainbow .main-box-title::after{
+  animation: yiimp-rainbow 8s linear infinite;
+}
+
+body.theme-rainbow .main-left-box,
+body.theme-rainbow .main-right-box,
+body.theme-rainbow .main-box{
+  box-shadow: 0 18px 65px rgba(0,0,0,.60);
+}
+
+/* Rainbow: animated accent bar + active glow */
+@keyframes yiimpRainbow {
+  0%{ background-position: 0% 50%; }
+  50%{ background-position: 100% 50%; }
+  100%{ background-position: 0% 50%; }
+}
+body.theme-rainbow .page .tabmenu-out::before{
+  background-size: 200% 200%;
+  animation: yiimpRainbow 8s ease infinite;
+}
+body.theme-rainbow .page .tabmenu-inner .selected{
+  box-shadow: 0 0 0 3px rgba(0,0,0,0), 0 0 0 3px rgba(255,255,255,.08), 0 14px 30px rgba(0,0,0,.35);
+}
+
+/* ============================================================
+   v5 - Compact layout + readability fixes
+   ============================================================ */
+
+:root{
+  --ui-font: 14px;
+  --table-font: 12px;
+  --cell-pad-y: 6px;
+  --cell-pad-x: 8px;
+}
+
+body{ font-size: var(--ui-font); }
+.page .main{ font-size: 1.0em !important; }
+
+.page .tabmenu-inner{ max-width: 1500px; padding: 8px 10px; gap: 10px; }
+.page .content-inner{ max-width: 1500px; padding: 12px 10px 22px; }
+.page .tabmenu-inner a{ padding: 6px 8px; font-size: 0.95em; border-radius: 11px; }
+.page .tabmenu-inner .brand{ padding: 6px 10px; border-radius: 13px; }
+.page .tabmenu-inner .brand .brand-logo{ width: 40px; height: 40px; padding: 5px; }
+.page .tabmenu-inner .brand .brand-text{ font-size: 0.98em; }
+
+.page .tabmenu-inner .theme-picker{ height: 32px; max-width: 170px; font-size: 0.92em; }
+.page .tabmenu-inner #nextpayout{ padding: 6px 9px; font-size: 0.92em; }
+
+select.theme-picker,
+select.theme-picker option{
+  background: rgba(10,14,22,.96);
+  color: var(--text);
+}
+
+.page .main > table[width="100%"]{
+  border-collapse: separate !important;
+  border-spacing: 12px !important;
+}
+
+.main-left-title,
+.main-right-title,
+.main-box-title{
+  padding: 9px 12px;
+  background: rgba(0,0,0,.18);
+}
+
+.main-left-inner,
+.main-right-inner,
+.main-box-inner{
+  padding: 10px 12px;
+}
+
+/* plain tables (eg. mining table) */
+.main-left-inner table,
+.main-right-inner table,
+.main-box-inner table{
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--table-font);
+  color: var(--text);
+}
+
+.main-left-inner table th,
+.main-right-inner table th,
+.main-box-inner table th{
+  background: var(--tableHeadBg);
+  padding: var(--cell-pad-y) var(--cell-pad-x);
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.main-left-inner table td,
+.main-right-inner table td,
+.main-box-inner table td{
+  padding: var(--cell-pad-y) var(--cell-pad-x);
+  border-bottom: 1px solid var(--border);
+}
+
+/* legacy datagrids */
+table.dataGrid,
+table.dataGrid2,
+table.reportgrid1{
+  font-size: var(--table-font) !important;
+  table-layout: auto;
+}
+
+table.dataGrid th, table.dataGrid td,
+table.dataGrid2 th, table.dataGrid2 td,
+table.reportgrid1 th, table.reportgrid1 td{
+  padding: var(--cell-pad-y) var(--cell-pad-x) !important;
+}
+
+table.dataGrid th,
+table.dataGrid2 th,
+table.reportgrid1 th{
+  white-space: nowrap;
+}
+
+table.dataGrid td,
+table.dataGrid2 td,
+table.reportgrid1 td{
+  white-space: nowrap;
+}
+
+/* Theme style differences */
+body.theme-midnight .main-left-box,
+body.theme-midnight .main-right-box,
+body.theme-midnight .main-box{
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+body.theme-aurora .main-left-box,
+body.theme-aurora .main-right-box,
+body.theme-aurora .main-box{
+  box-shadow: 0 0 0 1px rgba(45,212,191,.14) inset, 0 18px 60px rgba(0,0,0,.62);
+}
+
+body.theme-rainbow .main-left-title::after,
+body.theme-rainbow .main-right-title::after,
+body.theme-rainbow .main-box-title::after{
+  opacity: 1;
+}
+
+/* extra compact controls for mining table */
+#drop-stratum, #drop-coin, #drop-solo,
+#text-wallet, #text-rig-name{
+  font-size: 12px !important;
+  padding: 6px 8px !important;
+  border-radius: 10px !important;
+}
+#output{ font-size: 12px !important; }
+
+/* tighter text in info boxes */
+.main-left-inner li,
+.main-right-inner li,
+.main-box-inner li{
+  font-size: 0.92em;
+  line-height: 1.35;
+}
+
+/* ensure dropdown items readable even on browsers that apply native styling */
+select{ color-scheme: dark; }
+
+/* ============================================================
+   v6 - Layout fix: at 100% zoom the right-side tables were clipped
+   Cause: legacy pages use a 2-column TABLE layout (left fixed width)
+   Fix: stack columns on common screen widths, and allow wrap/scroll
+   ============================================================ */
+
+/* Keep legacy layout tables within viewport */
+.page .content-inner > table[width="100%"],
+.page .main > table[width="100%"]{
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Prevent long command line from forcing the page wider */
+#output{
+  white-space: normal !important;
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+}
+
+/* If a table is still wider than its panel, allow horizontal scroll INSIDE the panel (not whole page) */
+.main-left-inner,
+.main-right-inner,
+.main-box-inner{
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Stack the 2-column legacy grid on typical screens so all tables fit at 100% zoom */
+@media (max-width: 1600px){
+  .page .content-inner > table[width="100%"],
+  .page .main > table[width="100%"]{
+    border-collapse: separate !important;
+    border-spacing: 10px !important;
+  }
+
+  .page .content-inner > table[width="100%"] > tbody,
+  .page .main > table[width="100%"] > tbody,
+  .page .content-inner > table[width="100%"] > tbody > tr,
+  .page .main > table[width="100%"] > tbody > tr{
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .page .content-inner > table[width="100%"] > tbody > tr > td,
+  .page .main > table[width="100%"] > tbody > tr > td{
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+  .page .content-inner > table[width="100%"] > tbody > tr > td[width],
+  .page .main > table[width="100%"] > tbody > tr > td[width]{
+    width: 100% !important;
+  }
+
+  .page .content-inner > table[width="100%"] > tbody > tr > td + td,
+  .page .main > table[width="100%"] > tbody > tr > td + td{
+    margin-top: 12px;
+  }
+
+  /* Allow wrapping in wide tables so nothing gets clipped */
+  table.dataGrid td,
+  table.dataGrid2 td,
+  table.reportgrid1 td{
+    white-space: normal !important;
+  }
+
+  /* Also allow long URLs/text to wrap */
+  pre, code, a{
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}
+
