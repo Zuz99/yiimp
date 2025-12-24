@@ -86,28 +86,6 @@ CLI CommonList::AddTail(void *data)
 	return item;
 }
 
-CLI CommonList::AddHead(void *data)
-{
-	Enter();
-
-	CLI item = new COMMONLISTITEM;
-	item->data = data;
-
-	count++;
-
-	item->prev = NULL;
-
-	item->next = first;
-	first = item;
-
-	if(!last) last = item;
-
-	if(item->next) item->next->prev = item;
-
-	Leave();
-	return item;
-}
-
 void CommonList::Delete(CLI item)
 {
 	Enter();
