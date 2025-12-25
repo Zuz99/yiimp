@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
@@ -166,15 +166,17 @@ function BackendCoinsUpdate()
 				$coin->auxpow = true;
 		}
 
-        // Change for segwit
+        // Change for segwit (PATCHED: send JSON OBJECT, not JSON STRING)
 		if ($coin->usemweb) {
-			$template = $remote->getblocktemplate('{"rules":["segwit","mweb"]}');
+			// was: $remote->getblocktemplate('{"rules":["segwit","mweb"]}');
+			$template = $remote->getblocktemplate(array('rules'=>array('segwit','mweb')));
 		}
-
 		else if ($coin->usesegwit) {
-            $template = $remote->getblocktemplate('{"rules":["segwit"]}');
+			// was: $remote->getblocktemplate('{"rules":["segwit"]}');
+            $template = $remote->getblocktemplate(array('rules'=>array('segwit')));
         } else {
-            $template = $remote->getblocktemplate('{}');
+			// keep empty params for maximum compatibility (params:[])
+            $template = $remote->getblocktemplate('');
         }
         // Change for segwit end
 
@@ -488,13 +490,6 @@ function BackendCoinsVersionUpdate($check_algo = '')
 							array(':github' => $obj->tag_name, ':coinid'=>intval($coin->id)));
 					$algo_text .= $coin->name.'('.$coin->symbol.') ID:'.$coin->id.' algo:'.$coin->algo.' : New release found ('.$obj->tag_name.")\n";
 				}
-/*				if ((!$obj) || (!isset($obj->tag_name))) {
-					debuglog("link $link version ".var_export($execResult,true));
-					if (($obj) && (isset($obj->message))) {
-						$mail_text .= $coin->name.'('.$coin->symbol.') ID:'.$coin->id.' algo:'.$coin->algo.' : link '.$link.' message '.$obj->message."\n";
-					}
-				}
-*/
 			}
 			sleep(5); // slow down
 		}

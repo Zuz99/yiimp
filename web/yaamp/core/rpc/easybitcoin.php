@@ -143,9 +143,33 @@ class Bitcoin {
 		// If no parameters are passed, this will be an empty array
 		if($method == 'getblocktemplate')
 		{
-			$param = isset($params[0]) ? $params[0] : '';
-			$request = "{\"method\":\"$method\",\"params\":[$param],\"id\":$this->id}";
-		//  debuglog($request);
+			// yiimp forks often pass a raw JSON string here (eg '{"rules":["segwit"]}'),
+			// but bitcoind expects params[0] to be a JSON object (not a JSON string).
+			// Support both: decode JSON string to array, or accept arrays/objects directly.
+			$p0 = isset($params[0]) ? $params[0] : null;
+
+			if($p0 === '' || $p0 === null) {
+				$params = array(); // send params:[]
+			}
+			else if(is_string($p0)) {
+				$decoded = json_decode($p0, true);
+				if(json_last_error() === JSON_ERROR_NONE) {
+					$params = array($decoded);
+				} else {
+					// fallback: keep backward compatibility
+					$params = array($p0);
+				}
+			}
+			else {
+				$params = array($p0);
+			}
+
+			$request = json_encode(array(
+				'method' => $method,
+				'params' => $params,
+				'id'     => $this->id
+			));
+		//	debuglog($request);
 		}
 
 		else
