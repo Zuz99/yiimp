@@ -63,10 +63,24 @@ function BackendCoinsUpdate()
 
 		if ($debug) echo "{$coin->symbol}\n";
 
-		if(isset($info['difficulty']))
+		// Multi-algo wallets may expose algo-specific difficulties in getmininginfo (ex: Pulsar)
+		$mi = $remote->getmininginfo();
+
+		if($coin->algo == 'minotaurx' && is_array($mi) && isset($mi['difficulty_minotaurx'])) {
+			$difficulty = $mi['difficulty_minotaurx'];
+		}
+		else if($coin->algo == 'curvehash' && is_array($mi) && isset($mi['difficulty_curvehash'])) {
+			$difficulty = $mi['difficulty_curvehash'];
+		}
+		else if(is_array($mi) && isset($mi['difficulty']) && !is_array($mi['difficulty'])) {
+			$difficulty = $mi['difficulty'];
+		}
+		else if(isset($info['difficulty'])) {
 			$difficulty = $info['difficulty'];
-		else
+		}
+		else {
 			$difficulty = $remote->getdifficulty();
+		}
 
 		if(is_array($difficulty)) {
 			$coin->difficulty = arraySafeVal($difficulty,'proof-of-work');
@@ -166,18 +180,17 @@ function BackendCoinsUpdate()
 				$coin->auxpow = true;
 		}
 
-        // Change for segwit (PATCHED: send JSON OBJECT, not JSON STRING)
+        // Change for segwit
+		// Change for segwit (patched: send JSON object, not JSON string)
 		if ($coin->usemweb) {
-			// was: $remote->getblocktemplate('{"rules":["segwit","mweb"]}');
 			$template = $remote->getblocktemplate(array('rules'=>array('segwit','mweb')));
 		}
 		else if ($coin->usesegwit) {
-			// was: $remote->getblocktemplate('{"rules":["segwit"]}');
-            $template = $remote->getblocktemplate(array('rules'=>array('segwit')));
-        } else {
+			$template = $remote->getblocktemplate(array('rules'=>array('segwit')));
+		} else {
 			// keep empty params for maximum compatibility (params:[])
-            $template = $remote->getblocktemplate('');
-        }
+			$template = $remote->getblocktemplate('');
+		}
         // Change for segwit end
 
 		if($template && isset($template['coinbasevalue']))
@@ -218,7 +231,7 @@ function BackendCoinsUpdate()
 						if (arraySafeVal($template,'masternode_payments_started'))
 						$coin->reward -= arraySafeVal($template['masternode'],'amount',0)/100000000;
 					}
-					
+
 					if(isset($template['fundreward'])) 
 					{
 						$coin->reward -= arraySafeVal($template['fundreward'],'amount',0)/100000000;
@@ -266,11 +279,13 @@ function BackendCoinsUpdate()
 						if(!$coin->charity_amount)
 						$coin->reward -= $coin->reward * $coin->charity_percent / 100;
 					}
-		
+
 					break;
 			}
-				
-			if(isset($template['bits']))
+
+			// For some multi-algo coins (ex: Pulsar), difficulty is algo-specific.
+			// Avoid overriding it with a Bitcoin-style bits->diff conversion for those algos.
+			if(isset($template['bits']) && $coin->algo != 'minotaurx' && $coin->algo != 'curvehash')
 			{
 				$target = decode_compact($template['bits']);
 				$coin->difficulty = target_to_diff($target);
@@ -310,7 +325,7 @@ function BackendCoinsUpdate()
 				$blocksubsidy = $remote->getblocksubsidy();
 				$coin->reward = arraySafeVal($blocksubsidy,'miner',0);
 				$coin->charity_amount = arraySafeVal($blocksubsidy,'founders',0);
-	
+
 				if (!$coin->reward) {
 					// no coinbasevalue in ZEC blocktemplate :/
 					$txn = $template['coinbasetxn'];
@@ -413,6 +428,7 @@ function BackendCoinsUpdate()
 
 		if($coin->network_hash) {
 			$coin->network_ttf = intval($coin->difficulty * 0x100000000 / $coin->network_hash);
+			$coin->network_ttf = intval($coin->difficulty * 0x100000000 / $coin->network_hash);
 			if($coin->network_ttf > 2147483647) $coin->network_ttf = 2147483647;
 		}
 
@@ -507,10 +523,10 @@ function BackendCoinsVersionUpdate($check_algo = '')
 	    $mail_text .= "#### Algo: $current_algo ####\n".$algo_text;
 	    $algo_text = '';
 	}
-	
+
 	if ($mail_text != '') {
 		debuglog($mail_text);
-		
+
 		// prepare Report-Email
 	    $mail = new PHPMailer(false);
 
@@ -526,7 +542,7 @@ function BackendCoinsVersionUpdate($check_algo = '')
 
 	    $mail->setFrom($mail_source, 'GitHub Version Updater');
 		$mail->addAddress($mail_dest, 'Yiimp Poolsystem');
-		
+
 		$mail->isHTML(false);
 		$mail->Subject = $mail_subject;
 	    $mail->Body    = $mail_text;
