@@ -19,6 +19,10 @@ echo '<title>'.$pageTitle.'</title>';
 echo CHtml::cssFile("/extensions/jquery/themes/ui-lightness/jquery-ui.css");
 echo CHtml::cssFile('/yaamp/ui/css/main.css');
 echo CHtml::cssFile('/yaamp/ui/css/table.css');
+// Cache-bust for CSS/JS so browsers pick up changes after deploy
+$v_modern = @filemtime(dirname(__DIR__).'/css/modern.css');
+if(!$v_modern) $v_modern = time();
+echo CHtml::cssFile('/yaamp/ui/css/modern.css?v='.$v_modern);
 //echo CHtml::scriptFile('/yaamp/ui/js/jquery.tablesorter.js');
 
 //echo CHtml::scriptFile('/extensions/jquery/js/jquery-1.8.3-dev.js');
@@ -26,5 +30,10 @@ echo CHtml::cssFile('/yaamp/ui/css/table.css');
 
 $cs = app()->getClientScript();
 $cs->registerCoreScript('jquery.ui');
+
+// UI theme switcher (no functional impact)
+$v_themejs = @filemtime(dirname(__DIR__).'/js/theme.js');
+if(!$v_themejs) $v_themejs = time();
+echo CHtml::scriptFile('/yaamp/ui/js/theme.js?v='.$v_themejs);
 
 echo "</head>";

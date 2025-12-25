@@ -27,6 +27,10 @@ echo '<title>'.$pageTitle.'</title>';
 echo CHtml::cssFile("/extensions/jquery/themes/ui-lightness/jquery-ui.css");
 echo CHtml::cssFile('/yaamp/ui/css/main.css');
 echo CHtml::cssFile('/yaamp/ui/css/table.css');
+// Cache-bust for CSS/JS so browsers pick up changes after deploy
+$v_modern = @filemtime(__DIR__.'/css/modern.css');
+if(!$v_modern) $v_modern = time();
+echo CHtml::cssFile('/yaamp/ui/css/modern.css?v='.$v_modern);
 
 //echo CHtml::scriptFile('/extensions/jquery/js/jquery-1.8.3-dev.js');
 //echo CHtml::scriptFile('/extensions/jquery/js/jquery-ui-1.9.1.custom.min.js');
@@ -36,6 +40,9 @@ $cs->registerCoreScript('jquery.ui');
 //$cs->registerScriptFile('/yaamp/ui/js/jquery.tablesorter.js', CClientScript::POS_END);
 
 echo CHtml::scriptFile('/yaamp/ui/js/jquery.tablesorter.js');
+$v_themejs = @filemtime(__DIR__.'/js/theme.js');
+if(!$v_themejs) $v_themejs = time();
+echo CHtml::scriptFile('/yaamp/ui/js/theme.js?v='.$v_themejs);
 
 // if(!controller()->admin)
 // echo <<<end
@@ -71,11 +78,9 @@ return;
 
 function showItemHeader($selected, $url, $name)
 {
-	if($selected) $selected_text = "class='selected'";
-	else $selected_text = '';
-
-	echo "<span><a $selected_text href='$url'>$name</a></span>";
-	echo "&nbsp;";
+	$selected_text = $selected ? "class='selected'" : '';
+	// Keep the link logic identical; only adjust markup for modern sidebar styling
+	echo "<span class='nav-item'><a $selected_text href='$url'>$name</a></span>";
 }
 
 function showPageHeader()
@@ -83,7 +88,8 @@ function showPageHeader()
 	echo '<div class="tabmenu-out">';
 	echo '<div class="tabmenu-inner">';
 
-	echo '&nbsp;&nbsp;<a href="/">'.YAAMP_SITE_NAME.'</a>';
+	echo '<div class="brand"><a class="brand-link" href="/"><img class="brand-logo" src="/yaamp/image/logo.png" alt="logo" onerror="this.style.display=\'none\'" /><span class="brand-text">'.YAAMP_SITE_NAME.'</span></a></div>';
+	echo '<div class="nav">';
 
 	$action = controller()->action->id;
 	$wallet = user()->getState('yaamp-wallet');
@@ -130,17 +136,30 @@ function showPageHeader()
 		}
 	}
 
-	echo '<span style="float: right;">';
+	echo '</div>'; // nav
+
+	echo '<div class="header-tools">';
+	// Theme picker (UI only)
+	echo '<label class="theme-label" for="themePicker">Theme</label>';
+	echo '<select id="themePicker" class="theme-picker" aria-label="Theme">';
+	echo '<option value="midnight">Midnight (Blue/Red)</option>';
+	echo '<option value="ocean">Ocean (Blue/Teal)</option>';
+	echo '<option value="crimson">Crimson (Red/Gold)</option>';
+	echo '<option value="emerald">Emerald (Green/Blue)</option>';
+	echo '<option value="aurora">Aurora (Cyan/Purple)</option>';
+	echo '<option value="rainbow">Rainbow (Pelangi)</option>';
+	echo '</select>';
 
 	$mining = getdbosql('db_mining');
 	$nextpayment = date('H:i T', $mining->last_payout+YAAMP_PAYMENTS_FREQ);
 	$eta = ($mining->last_payout+YAAMP_PAYMENTS_FREQ) - time();
 	$eta_mn = 'in '.round($eta / 60).' minutes';
 
-	echo '<span id="nextpayout" style="font-size: .8em;" title="'.$eta_mn.'">Next Payout: '.$nextpayment.'</span>';
+	echo '<span id="nextpayout" title="'.$eta_mn.'">Next Payout: '.$nextpayment.'</span>';
+	echo '</div>'; // header-tools
 
-	echo "</div>";
-	echo "</div>";
+	echo "</div>"; // tabmenu-inner
+	echo "</div>"; // tabmenu-out
 }
 
 function showPageFooter()
