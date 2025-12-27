@@ -88,7 +88,7 @@ function showPageHeader()
 	echo '<div class="tabmenu-out">';
 	echo '<div class="tabmenu-inner">';
 
-	echo '<div class="brand"><a class="brand-link" href="/"><img class="brand-logo" src="/yaamp/image/logo.png" alt="logo" onerror="this.style.display=\'none\'" /><span class="brand-text">'.YAAMP_SITE_NAME.'</span></a></div>';
+	echo '<div class="brand"><a class="brand-link" href="/"><img class="brand-logo" src="/images/logo.png" alt="logo" onerror="this.style.display=\'none\'" /><span class="brand-text">'.YAAMP_SITE_NAME.'</span></a></div>';
 	echo '<div class="nav">';
 
 	$action = controller()->action->id;
@@ -142,12 +142,9 @@ function showPageHeader()
 	// Theme picker (UI only)
 	echo '<label class="theme-label" for="themePicker">Theme</label>';
 	echo '<select id="themePicker" class="theme-picker" aria-label="Theme">';
-	echo '<option value="midnight">Midnight (Blue/Red)</option>';
-	echo '<option value="ocean">Ocean (Blue/Teal)</option>';
-	echo '<option value="crimson">Crimson (Red/Gold)</option>';
-	echo '<option value="emerald">Emerald (Green/Blue)</option>';
-	echo '<option value="aurora">Aurora (Cyan/Purple)</option>';
-	echo '<option value="rainbow">Rainbow (Pelangi)</option>';
+	echo '<option value="midnight">Midnight</option>';
+	echo '<option value="aurora">Aurora</option>';
+	echo '<option value="rainbow">Rainbow</option>';
 	echo '</select>';
 
 	$mining = getdbosql('db_mining');

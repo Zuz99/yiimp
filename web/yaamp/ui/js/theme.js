@@ -7,7 +7,7 @@
   'use strict';
 
   var COOKIE = 'yiimp_theme';
-  var THEMES = ['midnight','ocean','crimson','emerald','aurora','rainbow'];
+  var THEMES = ['midnight','aurora','rainbow'];
 
   function getCookie(name) {
     var m = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/[.$?*|{}()\[\]\\\/\+^]/g, '\\$&') + '=([^;]*)'));
